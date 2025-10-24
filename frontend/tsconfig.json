@@ -24,8 +24,9 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "types": ["vite/client", "vitest/globals", "node"]
   },
-  "include": ["src"],
+  "include": ["src", "src/**/*", "tests/**/*", "eslint.config.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
