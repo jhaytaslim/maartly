@@ -1,0 +1,231 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 16px;
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  
+  /* Cognistock Color Palette */
+  --deep-indigo: #2C2E5E;
+  --vivid-blue: #5B83F6;
+  --success: #22C55E;
+  --warning: #FACC15;
+  --neutral: #EF44FC;
+  
+  /* Application Colors */
+  --background: #ffffff;
+  --foreground: #2C2E5E;
+  --card: #ffffff;
+  --card-foreground: #2C2E5E;
+  --popover: #ffffff;
+  --popover-foreground: #2C2E5E;
+  --primary: #5B83F6;
+  --primary-foreground: #ffffff;
+  --secondary: #2C2E5E;
+  --secondary-foreground: #ffffff;
+  --muted: #F5F7FA;
+  --muted-foreground: #64748B;
+  --accent: #5B83F6;
+  --accent-foreground: #ffffff;
+  --destructive: #EF4444;
+  --destructive-foreground: #ffffff;
+  --border: #E2E8F0;
+  --input: transparent;
+  --input-background: #F8FAFC;
+  --switch-background: #CBD5E1;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --ring: #5B83F6;
+  
+  /* Charts */
+  --chart-1: #5B83F6;
+  --chart-2: #22C55E;
+  --chart-3: #FACC15;
+  --chart-4: #EF44FC;
+  --chart-5: #2C2E5E;
+  
+  /* Radius */
+  --radius: 0.5rem;
+  
+  /* Sidebar */
+  --sidebar: #2C2E5E;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #5B83F6;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: rgba(91, 131, 246, 0.1);
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+  --sidebar-ring: #5B83F6;
+}
+
+.dark {
+  --background: #1A1B2E;
+  --foreground: #F8FAFC;
+  --card: #1F2937;
+  --card-foreground: #F8FAFC;
+  --popover: #1F2937;
+  --popover-foreground: #F8FAFC;
+  --primary: #5B83F6;
+  --primary-foreground: #ffffff;
+  --secondary: #374151;
+  --secondary-foreground: #F8FAFC;
+  --muted: #374151;
+  --muted-foreground: #9CA3AF;
+  --accent: #5B83F6;
+  --accent-foreground: #ffffff;
+  --destructive: #EF4444;
+  --destructive-foreground: #ffffff;
+  --border: #374151;
+  --input: #374151;
+  --input-background: #1F2937;
+  --ring: #5B83F6;
+  --chart-1: #5B83F6;
+  --chart-2: #22C55E;
+  --chart-3: #FACC15;
+  --chart-4: #EF44FC;
+  --chart-5: #94A3B8;
+  --sidebar: #1A1B2E;
+  --sidebar-foreground: #F8FAFC;
+  --sidebar-primary: #5B83F6;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: rgba(91, 131, 246, 0.1);
+  --sidebar-accent-foreground: #F8FAFC;
+  --sidebar-border: #374151;
+  --sidebar-ring: #5B83F6;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-switch-background: var(--switch-background);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-family);
+  }
+}
+
+/**
+ * Base typography. This is not applied to elements which have an ancestor with a Tailwind text class.
+ */
+@layer base {
+  :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) {
+    h1 {
+      font-size: var(--text-2xl);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    h2 {
+      font-size: var(--text-xl);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    h3 {
+      font-size: var(--text-lg);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    h4 {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    p {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-normal);
+      line-height: 1.5;
+    }
+
+    label {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    button {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    input {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-normal);
+      line-height: 1.5;
+    }
+  }
+}
+
+html {
+  font-size: var(--font-size);
+  font-family: var(--font-family);
+}
+
+/* Cognistock specific styles */
+.gradient-cognistock {
+  background: linear-gradient(135deg, #2C2E5E 0%, #5B83F6 100%);
+}
+
+.text-gradient-cognistock {
+  background: linear-gradient(135deg, #2C2E5E 0%, #5B83F6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Dashboard card hover effect */
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(91, 131, 246, 0.2);
+}

@@ -1,0 +1,708 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  TENANT_ADMIN
+  STORE_MANAGER
+  CASHIER
+}
+
+enum SubscriptionPlan {
+  STARTER
+  PROFESSIONAL
+  ENTERPRISE
+  CUSTOM
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  CANCELLED
+  TRIAL
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum ProductTransferStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  COMPLETED
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  CANCELLED
+  REFUNDED
+}
+
+enum EventStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum TaxType {
+  PERCENTAGE
+  FIXED
+  COMPOUND
+}
+
+enum TaxRegion {
+  NIGERIA
+  AFRICA
+  EUROPE
+  ARABIA
+  GLOBAL
+}
+
+model User {
+  id                     String    @id @default(auto()) @map("_id") @db.ObjectId
+  email                  String    @unique
+  password               String
+  firstName              String
+  lastName               String
+  phone                  String?
+  role                   UserRole
+  isActive               Boolean   @default(true)
+  emailVerified          Boolean   @default(false)
+  emailVerificationToken String?
+  passwordResetToken     String?
+  passwordResetExpires   DateTime?
+
+  // Relationships
+  tenantId String? @db.ObjectId
+  tenant   Tenant? @relation(fields: [tenantId], references: [id])
+  storeId  String? @db.ObjectId
+  store    Store?  @relation(fields: [storeId], references: [id])
+
+  // Activity tracking
+  lastLogin DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // User preferences
+  language String @default("en")
+  theme    String @default("light")
+
+  // Relations
+  orders           Order[]
+  debts            Debt[]
+  productTransfers ProductTransfer[]
+  activityLogs     ActivityLog[]
+  debtPayments     DebtPayment[]
+
+  // @@index([email])
+  @@index([tenantId])
+  @@index([storeId])
+}
+
+model Tenant {
+  id           String  @id @default(auto()) @map("_id") @db.ObjectId
+  businessName String
+  slug         String  @unique
+  domain       String? @unique
+  email        String  @unique
+  phone        String
+  address      String?
+  city         String?
+  country      String?
+  logo         String?
+
+  // Currency settings
+  currency       String  @default("USD")
+  currencyLocked Boolean @default(false) // If true, store managers cannot change store currency
+
+  // Theme configuration for storefront
+  themePrimaryColor String  @default("#5B83F6")
+  themeLayout       String  @default("grid") // grid or list
+  themeLogoUrl      String?
+
+  // Payment integrations
+  paymentGateway    String  @default("stripe") // stripe, paystack, etc.
+  paystackSecretKey String?
+  paystackPublicKey String?
+  stripeSecretKey   String?
+  stripePublicKey   String?
+
+  // Subscription
+  subscriptionPlan      SubscriptionPlan
+  subscriptionStatus    SubscriptionStatus @default(TRIAL)
+  customPlanPrice       Float?
+  subscriptionStartDate DateTime           @default(now())
+  subscriptionEndDate   DateTime?
+  billingCycle          String             @default("monthly") // monthly, annually
+
+  // Limits based on plan
+  maxStores   Int @default(1)
+  maxProducts Int @default(500)
+  maxUsers    Int @default(1)
+
+  // Usage tracking
+  currentStoreCount   Int @default(0)
+  currentProductCount Int @default(0)
+  currentUserCount    Int @default(0)
+
+  // Payment methods enabled for this tenant
+  enabledPaymentMethods String[] // Array of payment method IDs
+  paystackEnabled       Boolean  @default(false)
+  stripeEnabled         Boolean  @default(false)
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isActive  Boolean  @default(true)
+
+  // Relations
+  users            User[]
+  stores           Store[]
+  products         Product[]
+  categories       Category[]
+  suppliers        Supplier[]
+  customers        Customer[]
+  orders           Order[]
+  payments         Payment[]
+  taxes            Tax[]
+  debts            Debt[]
+  reports          Report[]
+  outboxEvents     OutboxEvent[]
+  inventory        Inventory[]
+  storefrontConfig StorefrontConfig?
+
+  @@index([subscriptionStatus])
+}
+
+model StorefrontConfig {
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
+  enabled Boolean @default(true)
+
+  tenantId String @unique @db.ObjectId
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+
+  // Payment methods enabled for this tenant
+  enabledPaymentMethods String[] // Array of payment method IDs
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isActive  Boolean  @default(true)
+}
+
+model Store {
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
+  name    String
+  address String
+  city    String
+  phone   String
+  email   String?
+
+  // Store-specific currency (if tenant allows)
+  currency String?
+
+  tenantId String @db.ObjectId
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+
+  managerId String? @db.ObjectId
+
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  users         User[]
+  inventory     Inventory[]
+  orders        Order[]
+  transfersFrom ProductTransfer[] @relation("TransferFrom")
+  transfersTo   ProductTransfer[] @relation("TransferTo")
+
+  @@index([tenantId])
+}
+
+model Category {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+  imageUrl    String?
+  parentId    String? @db.ObjectId
+
+  tenantId String @db.ObjectId
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products Product[]
+
+  @@index([tenantId])
+  @@index([parentId])
+}
+
+model Supplier {
+  id            String  @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  email         String
+  phone         String
+  address       String?
+  contactPerson String?
+
+  tenantId String @db.ObjectId
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products Product[]
+
+  @@index([tenantId])
+}
+
+model Product {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  sku         String  @unique
+  barcode     String? @unique
+  description String?
+  imageUrl    String?
+  qrCode      String?
+
+  // Pricing
+  costPrice    Float
+  sellingPrice Float
+  taxRate      Float? @default(0)
+
+  // Category and Supplier
+  categoryId String    @db.ObjectId // Made required
+  category   Category  @relation(fields: [categoryId], references: [id])
+  supplierId String?   @db.ObjectId // Optional
+  supplier   Supplier? @relation(fields: [supplierId], references: [id])
+
+  // Stock alerts
+  lowStockThreshold Int @default(10)
+  stock             Int
+
+  tenantId String @db.ObjectId
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  inventory     Inventory[]
+  orderItems    OrderItem[]
+  transferItems TransferItem[]
+
+  @@index([tenantId])
+  // @@index([sku])
+  // @@index([barcode])
+  @@index([categoryId])
+}
+
+model Inventory {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  storeId String @db.ObjectId
+  store   Store  @relation(fields: [storeId], references: [id])
+
+  productId String  @db.ObjectId
+  product   Product @relation(fields: [productId], references: [id])
+
+  tenantId String @db.ObjectId
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+
+  quantity         Int @default(0)
+  reservedQuantity Int @default(0) // For pending orders
+
+  lastRestockDate    DateTime?
+  lastStockCheckDate DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([productId, storeId])
+  @@index([productId])
+  @@index([storeId])
+}
+
+model Customer {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  firstName String
+  lastName  String
+  email     String?
+  phone     String
+  address   String?
+  city      String?
+
+  tenantId String @db.ObjectId
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+
+  // CRM
+  loyaltyPoints  Int   @default(0)
+  totalPurchases Float @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orders Order[]
+  debts  Debt[]
+
+  @@index([tenantId])
+  @@index([phone])
+}
+
+model Order {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  orderNumber String @unique
+
+  customerId String?   @db.ObjectId
+  customer   Customer? @relation(fields: [customerId], references: [id])
+
+  cashierId String @db.ObjectId
+  cashier   User   @relation(fields: [cashierId], references: [id])
+
+  storeId String @db.ObjectId
+  store   Store  @relation(fields: [storeId], references: [id])
+
+  tenantId String @db.ObjectId
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+
+  // Order details
+  subtotal       Float
+  taxAmount      Float  @default(0)
+  discountAmount Float  @default(0)
+  totalAmount    Float
+  currency       String @default("USD")
+
+  paymentMethod String
+  paymentStatus PaymentStatus @default(PENDING)
+  status        OrderStatus   @default(PENDING)
+
+  // Offline sync
+  offlineId String? // Client-generated ID for offline orders
+  syncedAt  DateTime?
+
+  notes String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items    OrderItem[]
+  payments Payment[]
+
+  @@index([tenantId])
+  @@index([storeId])
+  @@index([customerId])
+  // @@index([orderNumber])
+  @@index([offlineId])
+}
+
+model OrderItem {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  orderId String @db.ObjectId
+  order   Order  @relation(fields: [orderId], references: [id])
+
+  productId String  @db.ObjectId
+  product   Product @relation(fields: [productId], references: [id])
+
+  quantity  Int
+  unitPrice Float
+  taxRate   Float @default(0)
+  discount  Float @default(0)
+  subtotal  Float
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+model Payment {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  orderId String? @db.ObjectId
+  order   Order?  @relation(fields: [orderId], references: [id])
+
+  tenantId String @db.ObjectId
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+
+  amount        Float
+  currency      String        @default("USD")
+  paymentMethod String
+  paymentStatus PaymentStatus
+
+  // Payment gateway details
+  gatewayTransactionId String?
+  gatewayResponse      String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([tenantId])
+  @@index([orderId])
+}
+
+model ProductTransfer {
+  id             String @id @default(auto()) @map("_id") @db.ObjectId
+  transferNumber String @unique
+
+  fromStoreId String @db.ObjectId
+  fromStore   Store  @relation("TransferFrom", fields: [fromStoreId], references: [id])
+
+  toStoreId String @db.ObjectId
+  toStore   Store  @relation("TransferTo", fields: [toStoreId], references: [id])
+
+  requestedById String @db.ObjectId
+  requestedBy   User   @relation(fields: [requestedById], references: [id])
+
+  status ProductTransferStatus @default(PENDING)
+
+  notes           String?
+  rejectionReason String?
+
+  requestedAt DateTime  @default(now())
+  approvedAt  DateTime?
+  completedAt DateTime?
+
+  items TransferItem[]
+
+  @@index([fromStoreId])
+  @@index([toStoreId])
+}
+
+model TransferItem {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  transferId String          @db.ObjectId
+  transfer   ProductTransfer @relation(fields: [transferId], references: [id])
+
+  productId String  @db.ObjectId
+  product   Product @relation(fields: [productId], references: [id])
+
+  quantity Int
+
+  @@index([transferId])
+}
+
+model Tax {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  code        String // VAT, GST, SALES_TAX, etc.
+  rate        Float
+  taxType     TaxType @default(PERCENTAGE)
+  description String?
+
+  // Regional configuration
+  region         TaxRegion @default(GLOBAL)
+  country        String?
+  applicableFrom DateTime  @default(now())
+  applicableTo   DateTime?
+
+  // Tax calculation
+  isCompound     Boolean @default(false)
+  includeInPrice Boolean @default(false)
+
+  tenantId String @db.ObjectId
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([tenantId])
+  @@index([region])
+  @@index([country])
+}
+
+model Debt {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  debtNumber String @unique
+
+  customerId String   @db.ObjectId
+  customer   Customer @relation(fields: [customerId], references: [id])
+
+  cashierId String @db.ObjectId
+  cashier   User   @relation(fields: [cashierId], references: [id])
+
+  tenantId String @db.ObjectId
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+
+  totalAmount     Float
+  paidAmount      Float  @default(0)
+  remainingAmount Float
+  currency        String @default("USD")
+
+  dueDate DateTime?
+  notes   String?
+
+  isSettled Boolean   @default(false)
+  settledAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  payments DebtPayment[]
+
+  @@index([tenantId])
+  @@index([customerId])
+  @@index([isSettled])
+}
+
+model DebtPayment {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  debtId String @db.ObjectId
+  debt   Debt   @relation(fields: [debtId], references: [id])
+
+  amount        Float
+  paymentMethod String
+
+  receivedById String @db.ObjectId
+  receivedBy   User   @relation(fields: [receivedById], references: [id])
+
+  notes         String?
+  receiptNumber String?
+
+  createdAt DateTime @default(now())
+
+  @@index([debtId])
+}
+
+model PaymentMethod {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  type     String // card, cash, mobile_money, bank_transfer
+  provider String? // stripe, paystack, etc.
+
+  // Configuration
+  config String? // JSON string for API keys, etc.
+
+  isActive Boolean @default(true)
+  isGlobal Boolean @default(true) // Available to all tenants
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([type])
+}
+
+model PricingPlan {
+  id   String           @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  type SubscriptionPlan
+
+  // Pricing
+  monthlyPrice Float
+  annualPrice  Float
+
+  // Limits
+  maxStores   Int
+  maxProducts Int
+  maxUsers    Int
+
+  // Features
+  features String[] // Array of feature names
+
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ActivityLog {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId String @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id])
+
+  action    String
+  entity    String
+  entityId  String?
+  details   String?
+  ipAddress String?
+  userAgent String?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model OfflineSync {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId  String
+  storeId String
+
+  // Sync data
+  entity    String // orders, products, etc.
+  operation String // create, update, delete
+  data      String // JSON stringified data
+
+  synced   Boolean   @default(false)
+  syncedAt DateTime?
+  error    String?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([storeId])
+  @@index([synced])
+}
+
+// Outbox pattern for eventual consistency
+model OutboxEvent {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  tenantId String @db.ObjectId
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+
+  aggregateId   String // ID of the entity that changed
+  aggregateType String // Product, Order, Inventory, etc.
+  eventType     String // created, updated, deleted, stock_changed, etc.
+  payload       String // JSON stringified event data
+
+  status       EventStatus @default(PENDING)
+  processedAt  DateTime?
+  errorMessage String?
+  retryCount   Int         @default(0)
+
+  createdAt DateTime @default(now())
+
+  @@index([tenantId])
+  @@index([status])
+  @@index([aggregateType])
+  @@index([createdAt])
+}
+
+// Reports and Analytics
+model Report {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  tenantId String @db.ObjectId
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+
+  reportType String // daily_sales, weekly_sales, inventory_summary, etc.
+  period     String // 2025-10-22, 2025-W43, etc.
+
+  data String // JSON stringified report data
+
+  generatedAt DateTime @default(now())
+
+  @@index([tenantId])
+  @@index([reportType])
+  @@index([period])
+}
