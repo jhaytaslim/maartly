@@ -1,56 +1,12 @@
-// Suggested placement: Create a new folder `tests/unit` at the root level of the project (next to `src/` and `components/`), and place this file as `tests/unit/categories-page.test.tsx`.
-// This follows common conventions for Vitest/Jest in Vite projects: separates unit tests, easy to run with `vitest tests/unit/**/*.test.tsx`.
-// If you prefer colocated tests, place it as `components/pages/categories-page.test.tsx` next to the component.
-
-// To set up testing, add the following to your package.json under "devDependencies":
-// "vitest": "^1.6.0",
-// "@testing-library/react": "^14.1.2",
-// "@testing-library/jest-dom": "^6.4.2",
-// "@testing-library/user-event": "^14.5.2",
-// "jsdom": "^23.0.4"
-//
-// Add to package.json scripts: "test": "vitest"
-//
-// In vite.config.ts, add:
-// export default defineConfig({
-//   test: {
-//     environment: 'jsdom',
-//     setupFiles: ['./src/test-setup.ts'],
-//     globals: true, // Enables vi globals
-//   },
-//   ...
-// });
-//
-// Create src/test-setup.ts with:
-// import '@testing-library/jest-dom';
-// import { vi } from 'vitest';
-// // Suppress Radix UI ref warnings in tests
-// const originalWarn = console.warn;
-// beforeAll(() => {
-//   console.warn = (...args) => {
-//     if (args[0]?.includes('Function components cannot be given refs')) {
-//       return;
-//     }
-//     originalWarn.call(console, ...args);
-//   };
-// });
-// afterAll(() => {
-//   console.warn = originalWarn;
-// });
-//
-// Run with: pnpm test or pnpm vitest.
-
-// categories-page.test.tsx
-
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { CategoriesPage } from "../../components/pages/categories-page";
-import * as apiModule from "../../lib/api";
 import "@testing-library/jest-dom"; // Import here to extend expect with toBeInTheDocument, etc.
+import { CategoriesPage } from "@/pages/categories-page";
+import * as apiModule from "@/lib/api";
 
 // Mock the entire api module
-vi.mock("../../lib/api", () => ({
+vi.mock("@/lib/api", () => ({
   api: {
     getCategories: vi.fn(),
     createCategory: vi.fn(),
