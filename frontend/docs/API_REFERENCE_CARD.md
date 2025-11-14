@@ -1,4 +1,4 @@
-# 📡 Cognistock API Reference Card
+# 📡 Maartly API Reference Card
 
 Quick reference for all available API endpoints.
 

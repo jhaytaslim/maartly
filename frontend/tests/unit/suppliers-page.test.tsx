@@ -351,7 +351,11 @@ describe("SuppliersPage", () => {
     await user.click(editButton);
 
     expect(await screen.findByText("Edit Supplier")).toBeInTheDocument();
-    const nameInput = screen.getByLabelText("Supplier Name");
+    // const nameInput = screen.getByLabelText("Supplier Name");
+
+    const nameInput = screen.getByLabelText("Name");
+    // const contactInput = screen.getByLabelText("Contact Person");
+
     await user.clear(nameInput);
     await user.type(nameInput, "Updated Supplier A");
 

@@ -1,5 +1,5 @@
 {
-  "name": "stockly-inventory-management",
+  "name": "maartly-inventory-management",
   "version": "1.0.0",
   "description": "Complete inventory management system with POS, built with React, TypeScript, and Tailwind CSS",
   "type": "module",

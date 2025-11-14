@@ -63,7 +63,7 @@ export function SettingsPage({ language, setLanguage }: SettingsPageProps) {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="companyName">Company Name</Label>
-                  <Input id="companyName" defaultValue="Cognistock Inc." />
+                  <Input id="companyName" defaultValue="Maartly Inc." />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="taxId">Tax ID</Label>
@@ -84,7 +84,7 @@ export function SettingsPage({ language, setLanguage }: SettingsPageProps) {
                   <Input
                     id="email"
                     type="email"
-                    defaultValue="contact@stockly.com"
+                    defaultValue="contact@maartly.com"
                   />
                 </div>
               </div>
@@ -95,7 +95,7 @@ export function SettingsPage({ language, setLanguage }: SettingsPageProps) {
           <Card>
             <CardHeader>
               <CardTitle>Appearance</CardTitle>
-              <CardDescription>Customize how Cognistock looks</CardDescription>
+              <CardDescription>Customize how Maartly looks</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">

@@ -1,4 +1,4 @@
-# 📦 Cognistock - Smart Sales. Simple Control.
+# 📦 Maartly - Smart Sales. Simple Control.
 
 **Version 2.0 - INTEGRATION COMPLETE** - Enterprise-grade inventory management system with complete backend API, role-based access control, and multi-tenant architecture.
 
@@ -11,7 +11,7 @@
 - 📧 **Email Verification** - Secure signup with email confirmation
 - 📴 **Offline Mode** - Queue-based sync system
 - 💳 **Payment Integration** - Stripe & Paystack support
-- 🎨 **Cognistock Branding** - Professional design system (Deep Indigo + Vivid Blue)
+- 🎨 **Maartly Branding** - Professional design system (Deep Indigo + Vivid Blue)
 - 🔗 **Frontend-Backend Integration** - Complete API integration with all modules
 - 📊 **Role-Based Dashboards** - Different views for each role
 - ⚡ **Redis Caching** - High-performance data access
@@ -79,7 +79,7 @@
    ```bash
    # If using git
    git clone <repository-url>
-   cd stockly-inventory-management
+   cd maartly-inventory-management
 
    # Or extract the downloaded ZIP file
    ```
@@ -135,7 +135,7 @@ The built files will be in the `dist` folder, ready for deployment.
 ## 📁 Project Structure
 
 ```
-stockly-inventory-management/
+maartly-inventory-management/
 ├── src/
 │   ├── App.tsx                 # Main application component
 │   ├── components/

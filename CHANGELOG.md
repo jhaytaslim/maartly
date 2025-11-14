@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to Stockly Inventory Management System will be documented in this file.
+All notable changes to Maartly Inventory Management System will be documented in this file.
 
 ## [1.1.0] - 2024-10-13
 

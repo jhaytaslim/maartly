@@ -1,4 +1,4 @@
-# 🚀 START TESTING NOW - Cognistock
+# 🚀 START TESTING NOW - Maartly
 
 ## ⚡ Quick Start (3 Steps)
 
@@ -267,7 +267,7 @@ Should return: `{"status":"ok"}`
 
 ### 3. Frontend Health
 Open: `http://localhost:5173`
-Should show the Cognistock landing page
+Should show the Maartly landing page
 
 ---
 
@@ -443,7 +443,7 @@ This will help with debugging and future development!
 
 **Time**: 30-60 minutes
 
-**Outcome**: Fully functional Cognistock system ready for production!
+**Outcome**: Fully functional Maartly system ready for production!
 
 ---
 

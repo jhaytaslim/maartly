@@ -14,7 +14,7 @@
 - **Frontend Changes:**
   - Added slug field to signup form in `/components/pages/landing-page.tsx`
   - Added real-time slug formatting (lowercase, remove special chars)
-  - Added helper text showing preview: `{slug}.martly.com`
+  - Added helper text showing preview: `{slug}.maartly.com`
   - Clearly marked as optional with auto-generation from business name
   - Updated `/lib/api.ts` to include slug in signup request
 
@@ -100,15 +100,15 @@ async createCustomerOrder(orderData: any)
 
 ---
 
-### 4. ✅ Branding Updated to "Martly"
-**Problem:** Application still used "Stockly" branding in several places.
+### 4. ✅ Branding Updated to "Maartly"
+**Problem:** Application still used "Maartly" branding in several places.
 
 **Solution:**
-Updated the following files to use "Martly" branding:
+Updated the following files to use "Maartly" branding:
 - `/components/pages/landing-page.tsx` - Updated all instances (8 occurrences)
 - `/components/pages/settings-page.tsx` - Updated 2 instances
-- `/components/pages/customer-storefront-page.tsx` - Already using Martly
-- Backend email templates reference Martly
+- `/components/pages/customer-storefront-page.tsx` - Already using Maartly
+- Backend email templates reference Maartly
 
 ---
 
@@ -134,7 +134,7 @@ Updated the following files to use "Martly" branding:
 - [ ] Can signup without slug (auto-generates)
 - [ ] Slug validation works (duplicates get numbered)
 - [ ] Email verification sent with correct link
-- [ ] Storefront accessible at `{slug}.martly.com`
+- [ ] Storefront accessible at `{slug}.maartly.com`
 
 ### Login & Password Reset
 - [ ] "Forgot Password?" link visible in login dialog
@@ -213,6 +213,6 @@ The application now has:
 - Complete signup flow with slug support
 - Password reset capability
 - Working customer storefront (pending orders module)
-- Consistent "Martly" branding throughout
+- Consistent "Maartly" branding throughout
 
 Ready for testing and continued development! 🚀

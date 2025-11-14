@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Cognistock backend has been successfully integrated with all modules connected to the main application. This document provides a comprehensive guide for setup, testing, and deployment.
+The Maartly backend has been successfully integrated with all modules connected to the main application. This document provides a comprehensive guide for setup, testing, and deployment.
 
 ## ✅ Completed Modules
 
@@ -65,7 +65,7 @@ PORT=3000
 API_PREFIX=api/v1
 
 # Database
-DATABASE_URL="mongodb://localhost:27017/cognistock"
+DATABASE_URL="mongodb://localhost:27017/maartly"
 
 # JWT
 JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
@@ -81,8 +81,8 @@ CACHE_TTL=3600
 
 # RabbitMQ
 RABBITMQ_URL=amqp://localhost:5672
-RABBITMQ_EXCHANGE=cognistock_events
-RABBITMQ_QUEUE=cognistock_queue
+RABBITMQ_EXCHANGE=maartly_events
+RABBITMQ_QUEUE=maartly_queue
 
 # Rate Limiting
 RATE_LIMIT_TTL=60
@@ -93,7 +93,7 @@ SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USER=your-email@gmail.com
 SMTP_PASSWORD=your-app-password
-SMTP_FROM=noreply@cognistock.com
+SMTP_FROM=noreply@maartly.com
 
 # Payment Gateways (Optional)
 PAYSTACK_SECRET_KEY=your-paystack-secret-key
@@ -103,7 +103,7 @@ STRIPE_WEBHOOK_SECRET=your-stripe-webhook-secret
 # File Storage (Optional)
 AWS_ACCESS_KEY_ID=your-aws-access-key
 AWS_SECRET_ACCESS_KEY=your-aws-secret-key
-AWS_BUCKET_NAME=cognistock-assets
+AWS_BUCKET_NAME=maartly-assets
 AWS_REGION=us-east-1
 
 # Frontend URL (for CORS)
@@ -135,7 +135,7 @@ npx prisma migrate deploy
 **MongoDB:**
 ```bash
 # Using Docker
-docker run -d -p 27017:27017 --name cognistock-mongo mongo:latest
+docker run -d -p 27017:27017 --name maartly-mongo mongo:latest
 
 # Or use your local MongoDB installation
 mongod --dbpath /path/to/data
@@ -144,7 +144,7 @@ mongod --dbpath /path/to/data
 **Redis:**
 ```bash
 # Using Docker
-docker run -d -p 6379:6379 --name cognistock-redis redis:latest
+docker run -d -p 6379:6379 --name maartly-redis redis:latest
 
 # Or use your local Redis installation
 redis-server
@@ -153,7 +153,7 @@ redis-server
 **RabbitMQ:**
 ```bash
 # Using Docker
-docker run -d -p 5672:5672 -p 15672:15672 --name cognistock-rabbitmq rabbitmq:3-management
+docker run -d -p 5672:5672 -p 15672:15672 --name maartly-rabbitmq rabbitmq:3-management
 
 # Access RabbitMQ management UI at http://localhost:15672
 # Default credentials: guest/guest
@@ -188,7 +188,7 @@ curl http://localhost:3000/api/v1/health
 curl -X POST http://localhost:3000/api/v1/auth/register \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "admin@cognistock.com",
+    "email": "admin@maartly.com",
     "password": "SecurePassword123!",
     "firstName": "Super",
     "lastName": "Admin",
@@ -202,7 +202,7 @@ curl -X POST http://localhost:3000/api/v1/auth/register \
 curl -X POST http://localhost:3000/api/v1/auth/login \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "admin@cognistock.com",
+    "email": "admin@maartly.com",
     "password": "SecurePassword123!"
   }'
 ```
@@ -519,7 +519,7 @@ The application uses NestJS built-in logger:
 npm run start:dev
 
 # View logs in production
-pm2 logs cognistock-backend
+pm2 logs maartly-backend
 ```
 
 ### Database Monitoring
@@ -668,7 +668,7 @@ curl -X POST http://localhost:3000/api/v1/auth/refresh \
 
 ## 🎉 Conclusion
 
-The Cognistock backend is now fully integrated and ready for development. All modules are connected, tested, and documented. You can now proceed with:
+The Maartly backend is now fully integrated and ready for development. All modules are connected, tested, and documented. You can now proceed with:
 
 1. Frontend-backend integration
 2. End-to-end testing

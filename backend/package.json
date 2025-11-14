@@ -1,8 +1,8 @@
 {
-  "name": "martly-backend",
+  "name": "maartly-backend",
   "version": "2.0.0",
-  "description": "Martly - Smart Sales. Simple Control. Backend API",
-  "author": "Martly Team",
+  "description": "Maartly - Smart Sales. Simple Control. Backend API",
+  "author": "Maartly Team",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -28,6 +28,7 @@
     "@nestjs/config": "^3.1.1",
     "@nestjs/core": "^10.3.0",
     "@nestjs/jwt": "^10.2.0",
+    "@nestjs/mapped-types": "^2.1.0",
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.3.0",
     "@nestjs/schedule": "^4.0.0",

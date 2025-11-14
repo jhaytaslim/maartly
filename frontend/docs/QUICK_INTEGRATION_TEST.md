@@ -20,7 +20,7 @@ npm install
 
 # Create .env file
 cat > .env << 'EOF'
-DATABASE_URL="mongodb://localhost:27017/martly"
+DATABASE_URL="mongodb://localhost:27017/maartly"
 JWT_SECRET="your-super-secret-jwt-key-change-this-in-production-min-32-chars"
 JWT_EXPIRES_IN="7d"
 REDIS_HOST="localhost"
@@ -29,7 +29,7 @@ SMTP_HOST="smtp.gmail.com"
 SMTP_PORT=587
 SMTP_USER="your-email@gmail.com"
 SMTP_PASS="your-app-password"
-EMAIL_FROM="noreply@martly.com"
+EMAIL_FROM="noreply@maartly.com"
 NODE_ENV="development"
 PORT=3001
 APP_URL="http://localhost:5173"
@@ -102,7 +102,7 @@ npm run prisma:studio
 
 # Or use MongoDB shell
 mongosh
-use martly
+use maartly
 db.user.updateOne(
   { email: "test@example.com" },
   { $set: { emailVerified: true, password: "$argon2id$..." } }
@@ -419,6 +419,6 @@ If all tests pass, you have:
 
 ---
 
-**Congratulations!** Your Martly system is fully integrated and ready for development! 🎊
+**Congratulations!** Your Maartly system is fully integrated and ready for development! 🎊
 
 *Smart Sales. Simple Control.*

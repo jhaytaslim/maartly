@@ -16,6 +16,7 @@ import {
   Wifi,
   WifiOff,
   Calculator,
+  LogOut,
 } from "lucide-react";
 import {
   Sidebar,
@@ -184,7 +185,7 @@ export function AppSidebar({
             <Package className="h-6 w-6 text-primary-foreground" />
           </div>
           <div className="flex flex-col">
-            <span className="text-lg font-semibold">Cognistock</span>
+            <span className="text-lg font-semibold">Maartly</span>
             <span className="text-xs text-muted-foreground">
               Smart Inventory. Smarter Business.
             </span>
@@ -308,6 +309,27 @@ export function AppSidebar({
         )}
       </SidebarContent>
 
+      {/* <SidebarFooter className="p-4 border-t">
+        <div className="flex items-center justify-between text-xs">
+          <span className="flex items-center gap-2">
+            {isOffline ? (
+              <>
+                <WifiOff className="h-4 w-4 text-destructive" />
+                <span className="text-destructive">Offline Mode</span>
+              </>
+            ) : (
+              <>
+                <Wifi className="h-4 w-4 text-green-600" />
+                <span className="text-muted-foreground">Online</span>
+              </>
+            )}
+          </span>
+          <Badge variant="outline" className="text-xs">
+            {userRole.replace("_", " ")}
+          </Badge>
+        </div>
+      </SidebarFooter> */}
+
       <SidebarFooter className="p-4 border-t">
         <div className="flex items-center justify-between text-xs">
           <span className="flex items-center gap-2">
@@ -326,6 +348,21 @@ export function AppSidebar({
           <Badge variant="outline" className="text-xs">
             {userRole.replace("_", " ")}
           </Badge>
+        </div>
+
+        <div className="mt-1">
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                onClick={() => {
+                  /* Implement logout functionality here */
+                }}
+              >
+                <LogOut className="h-4 w-4" />
+                <span>Logout</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
         </div>
       </SidebarFooter>
     </Sidebar>

@@ -21,8 +21,8 @@ export class RabbitMQService implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(RabbitMQService.name);
   private connection: ChannelModel | null = null;
   private channel: amqp.Channel | null = null;
-  private readonly exchangeName = "martly.events";
-  private readonly dlxExchangeName = "martly.dlx";
+  private readonly exchangeName = "maartly.events";
+  private readonly dlxExchangeName = "maartly.dlx";
 
   async onModuleInit() {
     await this.connect();

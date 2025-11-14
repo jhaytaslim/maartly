@@ -30,6 +30,7 @@ import { Badge } from "../components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "../components/ui/alert";
 import { Plus, Edit, Trash2, Mail, Phone, AlertCircle } from "lucide-react";
 import { api } from "../lib/api";
+import { toast } from "sonner";
 
 interface Supplier {
   id: string;
@@ -78,12 +79,21 @@ export function SuppliersPage() {
     try {
       const newSupplier = await api.createSupplier({
         ...formData,
-        status: "Active",
-        productsSupplied: 0,
+        // status: "Active",
+        // productsSupplied: 0,
       });
       setSuppliers((prev) => [...prev, newSupplier]);
       setIsAddDialogOpen(false);
     } catch (err) {
+      toast.error("Failed to create supplier", {
+        classNames: {
+          description: "text-red-500", // Example with Tailwind CSS class
+        },
+        style: {
+          color: "red",
+        },
+        duration: 14000,
+      });
       console.error("Failed to create supplier:", err);
       setError("Failed to create supplier. Please try again.");
     }

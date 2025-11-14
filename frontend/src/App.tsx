@@ -1,11 +1,12 @@
 import { useState, lazy, Suspense, memo, useEffect } from "react";
-import { Toaster } from "./src/components/ui/sonner";
-import { SidebarProvider } from "./src/components/ui/sidebar";
-import { AppSidebar } from "./src/components/app-sidebar";
-import { TopBar } from "./src/components/top-bar";
-import { LandingPage } from "./src/components/pages/landing-page";
-import { AuthProvider, useAuth } from "./src/lib/auth-context";
-import { canAccessPage } from "./src/lib/permissions";
+import { Toaster } from "@/components/ui/sonner";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/ui/app-sidebar";
+import { TopBar } from "@/components/ui/top-bar";
+import { LandingPage } from "@/pages/landing-page";
+import { AuthProvider, useAuth } from "@/lib/auth-context";
+// import { canAccessPage } from "@/lib/permissions";
+import { canAccessPage } from "@/lib/permissions";
 import {
   BrowserRouter,
   Routes,
@@ -52,82 +53,82 @@ type LazyComponent = React.LazyExoticComponent<React.ComponentType<any>>;
 // Map of page keys to their lazy-loaded component
 const PageComponents: Record<PageType, LazyComponent> = {
   [Page.Dashboard]: lazy(() =>
-    import("./src/components/pages/dashboard-overview").then((m) => ({
+    import("@/pages/dashboard-overview").then((m) => ({
       default: m.DashboardOverview,
     }))
   ),
   [Page.POS]: lazy(() =>
-    import("./src/components/pages/pos-page").then((m) => ({
+    import("@/pages/pos-page").then((m) => ({
       default: m.POSPage,
     }))
   ),
   [Page.Products]: lazy(() =>
-    import("./src/components/pages/products-page").then((m) => ({
+    import("@/pages/products-page").then((m) => ({
       default: m.ProductsPage,
     }))
   ),
   [Page.Categories]: lazy(() =>
-    import("./src/components/pages/categories-page").then((m) => ({
+    import("@/pages/categories-page").then((m) => ({
       default: m.CategoriesPage,
     }))
   ),
   [Page.Suppliers]: lazy(() =>
-    import("./src/components/pages/suppliers-page").then((m) => ({
+    import("@/pages/suppliers-page").then((m) => ({
       default: m.SuppliersPage,
     }))
   ),
   [Page.ProductTransfer]: lazy(() =>
-    import("./src/components/pages/product-transfer-page").then((m) => ({
+    import("@/pages/product-transfer-page").then((m) => ({
       default: m.ProductTransferPage,
     }))
   ),
   [Page.LowStockAlerts]: lazy(() =>
-    import("./src/components/pages/low-stock-alerts-page").then((m) => ({
+    import("@/pages/low-stock-alerts-page").then((m) => ({
       default: m.LowStockAlertsPage,
     }))
   ),
   [Page.Orders]: lazy(() =>
-    import("./src/components/pages/orders-page").then((m) => ({
+    import("@/pages/orders-page").then((m) => ({
       default: m.OrdersPage,
     }))
   ),
   [Page.TaxManagement]: lazy(() =>
-    import("./src/components/pages/tax-management-page").then((m) => ({
+    import("@/pages/tax-management-page").then((m) => ({
       default: m.TaxManagementPage,
     }))
   ),
   [Page.PricingPlans]: lazy(() =>
-    import("./src/components/pages/pricing-plans-page").then((m) => ({
+    import("@/pages/pricing-plans-page").then((m) => ({
       default: m.PricingPlansPage,
     }))
   ),
   [Page.Employees]: lazy(() =>
-    import("./src/components/pages/employees-page").then((m) => ({
+    import("@/pages/employees-page").then((m) => ({
       default: m.EmployeesPage,
     }))
   ),
   [Page.Customers]: lazy(() =>
-    import("./src/components/pages/customers-page").then((m) => ({
+    import("@/pages/customers-page").then((m) => ({
       default: m.CustomersPage,
     }))
   ),
   [Page.Stores]: lazy(() =>
-    import("./src/components/pages/stores-page").then((m) => ({
+    import("@/pages/stores-page").then((m) => ({
       default: m.StoresPage,
     }))
   ),
   [Page.DebtManagement]: lazy(() =>
-    import("./src/components/pages/debt-management-page").then((m) => ({
+    import("@/pages/debt-management-page").then((m) => ({
       default: m.DebtManagementPage,
     }))
   ),
   [Page.Settings]: lazy(() =>
-    import("./src/components/pages/settings-page").then((m) => ({
+    import("@/pages/settings-page").then((m) => ({
       default: m.SettingsPage,
     }))
   ),
   [Page.VerifyAccount]: lazy(() =>
-    import("./src/components/pages/verify-account-page").then((m) => ({
+    import("@/pages/verify-account-page").then((m) => ({
       default: m.VerifyAccountPage,
     }))
   ),
@@ -136,7 +137,7 @@ const PageComponents: Record<PageType, LazyComponent> = {
   //   default: m.default,
   // }))),
   [Page.CustomerStorefront]: lazy(() =>
-    import("./src/components/pages/customer-storefront-page").then((m) => ({
+    import("@/pages/customer-storefront-page").then((m) => ({
       default: m.CustomerStorefrontPage,
     }))
   ),

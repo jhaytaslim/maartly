@@ -1,4 +1,4 @@
-# Martly Backend API
+# Maartly Backend API
 
 **Smart Sales. Simple Control.** - Production-ready NestJS backend with MongoDB, Prisma, Redis caching, and comprehensive RBAC.
 
@@ -54,7 +54,7 @@ The API will be available at:
 
 ## 🔐 User Roles & Permissions
 
-### SuperAdmin (Martly Internal)
+### SuperAdmin (Maartly Internal)
 - Manage all tenants
 - Configure pricing plans
 - Enable/disable payment methods
@@ -154,7 +154,7 @@ Copy `.env.example` to `.env` and configure:
 
 ```env
 # Database
-DATABASE_URL="mongodb://localhost:27017/martly"
+DATABASE_URL="mongodb://localhost:27017/maartly"
 
 # JWT
 JWT_SECRET="your-secret-key"
@@ -184,10 +184,10 @@ PAYSTACK_SECRET_KEY="sk_test_..."
 
 ```bash
 # Build image
-docker build -t martly-backend .
+docker build -t maartly-backend .
 
 # Run container
-docker run -p 3001:3001 --env-file .env martly-backend
+docker run -p 3001:3001 --env-file .env maartly-backend
 ```
 
 ### Traditional Hosting
@@ -342,8 +342,8 @@ MIT License - see LICENSE file
 
 - **Docs**: http://localhost:3001/api/docs
 - **Issues**: GitHub issues
-- **Email**: support@martly.com
+- **Email**: support@maartly.com
 
 ---
 
-**Martly Backend v2.0** - Smart Sales. Simple Control. 🚀
+**Maartly Backend v2.0** - Smart Sales. Simple Control. 🚀

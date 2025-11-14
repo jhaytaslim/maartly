@@ -1,4 +1,4 @@
-# Frontend-Backend Integration Guide for Cognistock
+# Frontend-Backend Integration Guide for Maartly
 
 ## 🎉 Integration Complete!
 
@@ -378,7 +378,7 @@ docker-compose restart redis
 ### Backend (.env)
 ```env
 # Database
-DATABASE_URL="mongodb://localhost:27017/cognistock"
+DATABASE_URL="mongodb://localhost:27017/maartly"
 
 # JWT
 JWT_SECRET="your-super-secret-jwt-key"
@@ -401,7 +401,7 @@ EMAIL_HOST="smtp.gmail.com"
 EMAIL_PORT=587
 EMAIL_USER="your-email@gmail.com"
 EMAIL_PASSWORD="your-app-password"
-EMAIL_FROM="noreply@cognistock.com"
+EMAIL_FROM="noreply@maartly.com"
 
 # App
 PORT=3001

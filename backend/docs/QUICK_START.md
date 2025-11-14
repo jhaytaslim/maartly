@@ -1,6 +1,6 @@
-# 🚀 Cognistock Backend - Quick Start Guide
+# 🚀 Maartly Backend - Quick Start Guide
 
-Get your Cognistock backend up and running in 5 minutes!
+Get your Maartly backend up and running in 5 minutes!
 
 ## Prerequisites
 
@@ -29,9 +29,9 @@ This starts:
 cp .env.example .env
 
 # Edit .env and update these lines for Docker:
-# DATABASE_URL="mongodb://cognistock:cognistock_password@localhost:27017/cognistock?authSource=admin"
-# REDIS_PASSWORD=cognistock_redis_password
-# RABBITMQ_URL=amqp://cognistock:cognistock_rabbitmq_password@localhost:5672/cognistock
+# DATABASE_URL="mongodb://maartly:maartly_password@localhost:27017/maartly?authSource=admin"
+# REDIS_PASSWORD=maartly_redis_password
+# RABBITMQ_URL=amqp://maartly:maartly_rabbitmq_password@localhost:5672/maartly
 ```
 
 ### Step 3: Install & Run
@@ -122,7 +122,7 @@ curl http://localhost:3000/api/v1/health
 curl -X POST http://localhost:3000/api/v1/auth/register \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "admin@cognistock.com",
+    "email": "admin@maartly.com",
     "password": "SecurePassword123!",
     "firstName": "Admin",
     "lastName": "User",
@@ -133,7 +133,7 @@ curl -X POST http://localhost:3000/api/v1/auth/register \
 curl -X POST http://localhost:3000/api/v1/auth/login \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "admin@cognistock.com",
+    "email": "admin@maartly.com",
     "password": "SecurePassword123!"
   }'
 ```
@@ -145,7 +145,7 @@ curl -X POST http://localhost:3000/api/v1/auth/login \
 | Service | URL | Credentials |
 |---------|-----|-------------|
 | Backend API | http://localhost:3000/api/v1 | - |
-| RabbitMQ Management | http://localhost:15672 | cognistock / cognistock_rabbitmq_password |
+| RabbitMQ Management | http://localhost:15672 | maartly / maartly_rabbitmq_password |
 | Mongo Express | http://localhost:8081 | admin / admin123 |
 
 ---
@@ -163,7 +163,7 @@ npm run build
 npm run start:prod
 
 # View logs (if using PM2)
-pm2 logs cognistock-backend
+pm2 logs maartly-backend
 
 # Stop all Docker services
 docker-compose down
@@ -217,7 +217,7 @@ npx prisma db push
 
 ```bash
 # Check RabbitMQ status
-docker logs cognistock-rabbitmq  # Docker
+docker logs maartly-rabbitmq  # Docker
 rabbitmqctl status  # Local installation
 
 # Verify credentials in .env match docker-compose.yml

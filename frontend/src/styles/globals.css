@@ -6,14 +6,14 @@
 :root {
   --font-size: 16px;
   --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  
-  /* Cognistock Color Palette */
+
+  /* Maartly Color Palette */
   --deep-indigo: #2C2E5E;
   --vivid-blue: #5B83F6;
   --success: #22C55E;
   --warning: #FACC15;
   --neutral: #EF44FC;
-  
+
   /* Application Colors */
   --background: #ffffff;
   --foreground: #2C2E5E;
@@ -38,17 +38,17 @@
   --font-weight-medium: 500;
   --font-weight-normal: 400;
   --ring: #5B83F6;
-  
+
   /* Charts */
   --chart-1: #5B83F6;
   --chart-2: #22C55E;
   --chart-3: #FACC15;
   --chart-4: #EF44FC;
   --chart-5: #2C2E5E;
-  
+
   /* Radius */
   --radius: 0.5rem;
-  
+
   /* Sidebar */
   --sidebar: #2C2E5E;
   --sidebar-foreground: #ffffff;
@@ -208,12 +208,12 @@ html {
   font-family: var(--font-family);
 }
 
-/* Cognistock specific styles */
-.gradient-cognistock {
+/* Maartly specific styles */
+.gradient-maartly {
   background: linear-gradient(135deg, #2C2E5E 0%, #5B83F6 100%);
 }
 
-.text-gradient-cognistock {
+.text-gradient-maartly {
   background: linear-gradient(135deg, #2C2E5E 0%, #5B83F6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -228,4 +228,13 @@ html {
 .card-hover:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 25px -5px rgba(91, 131, 246, 0.2);
+}
+
+[data-radix-popper-content-wrapper] {
+  position: fixed !important;
+  z-index: 9999 !important;
+}
+
+.group\/sidebar-wrapper {
+  overflow: visible !important;
 }

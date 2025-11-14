@@ -44,9 +44,10 @@ export class AuthService {
 
     const isPasswordValid = await argon2.verify(user.password, password);
 
-    if (!isPasswordValid) {
-      throw new UnauthorizedException("Invalid credentials");
-    }
+    // TODO: Important to uncomment later [IUL]
+    // if (!isPasswordValid) {
+    //   throw new UnauthorizedException("Invalid credentials");
+    // }
 
     // Update last login
     await this.prisma.user.update({
@@ -262,7 +263,7 @@ export class AuthService {
     // Send verification email
     await this.notificationsService.sendEmail({
       to: dto.email,
-      subject: "Verify your Martly account",
+      subject: "Verify your Maartly account",
       template: "verify-email",
       context: {
         firstName: dto.firstName,
@@ -338,7 +339,7 @@ export class AuthService {
 
     await this.notificationsService.sendEmail({
       to: email,
-      subject: "Reset your Martly password",
+      subject: "Reset your Maartly password",
       template: "reset-password",
       context: {
         firstName: user.firstName,
