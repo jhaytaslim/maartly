@@ -29,10 +29,6 @@ class APIService {
       ...(this.token ? { Authorization: `Bearer ${this.token}` } : {}),
     };
 
-    // if (this.token) {
-    //   headers = { ...headers, Authorization: `Bearer ${this.token}` };
-    // }
-
     try {
       const response = await fetch(`${API_URL}${endpoint}`, {
         ...options,
