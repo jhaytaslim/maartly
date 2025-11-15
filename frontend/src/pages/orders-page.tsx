@@ -50,6 +50,7 @@ import {
   CreditCard,
   Wallet,
   Banknote,
+  X,
 } from "lucide-react";
 import { mockOrders } from "../lib/mock-data";
 import { Separator } from "../components/ui/separator";

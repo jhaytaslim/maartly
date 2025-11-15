@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
@@ -44,6 +44,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "../components/ui/tabs";
+import { useTauriEnv } from "@/lib/tauri-env";
 
 const pricingPlans = [
   {
@@ -257,6 +258,10 @@ export function LandingPage() {
     }
   };
 
+  // const isDesktop = useIsDesktop();
+  const { isDesktop, osPlatform } = useTauriEnv();
+  console.log("Running on:", isDesktop ? osPlatform : "web", isDesktop);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}
@@ -281,10 +286,18 @@ export function LandingPage() {
             <Button variant="ghost" onClick={() => setIsLoginOpen(true)}>
               Login
             </Button>
-            <Button onClick={() => setIsSignupOpen(true)}>Get Started</Button>
+            {!isDesktop && (
+              <Button onClick={() => setIsSignupOpen(true)}>Get Started</Button>
+            )}
           </div>
           <div className="md:hidden">
-            <Button onClick={() => setIsSignupOpen(true)}>Get Started</Button>
+            {isDesktop ? (
+              <Button variant="ghost" onClick={() => setIsLoginOpen(true)}>
+                Login
+              </Button>
+            ) : (
+              <Button onClick={() => setIsSignupOpen(true)}>Get Started</Button>
+            )}
           </div>
         </div>
       </nav>
