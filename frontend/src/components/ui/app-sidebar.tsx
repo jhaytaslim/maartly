@@ -34,6 +34,7 @@ import { Badge } from "./badge";
 import { useState, useMemo } from "react";
 import { UserRole, canAccessPage } from "../../lib/permissions";
 import { PageType } from "@/App";
+import { useAuth } from "@/lib/auth-context";
 
 interface AppSidebarProps {
   currentPage: PageType;
@@ -55,6 +56,7 @@ export function AppSidebar({
   userRole,
 }: AppSidebarProps) {
   const [isOffline, setIsOffline] = useState(false);
+  const { logout } = useAuth();
 
   const allMenuItems = useMemo(
     () => ({
@@ -353,11 +355,7 @@ export function AppSidebar({
         <div className="mt-1">
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton
-                onClick={() => {
-                  /* Implement logout functionality here */
-                }}
-              >
+              <SidebarMenuButton onClick={logout}>
                 <LogOut className="h-4 w-4" />
                 <span>Logout</span>
               </SidebarMenuButton>
