@@ -48,7 +48,7 @@ next-env.d.ts
 
 **/dist
 **/zagent
-**/mongodb-binaries
+**/.mongodb-binaries
 
 # specials(temp)
 .actrc
