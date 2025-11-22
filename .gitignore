@@ -48,3 +48,10 @@ next-env.d.ts
 
 **/dist
 **/zagent
+
+# specials(temp)
+.actrc
+.github/
+.secrets
+frontend/docs/PACKAGING.MD
+frontend/scripts/build-all.sh

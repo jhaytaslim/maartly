@@ -11,6 +11,7 @@ import { randomBytes } from "crypto";
 import { PrismaService } from "../prisma/prisma.service";
 import { NotificationsService } from "../notifications/notifications.service";
 import { UserRole } from "@prisma/client";
+import { CreateTenantDto } from "./dtos/create-tenant.dto";
 
 @Injectable()
 export class AuthService {
@@ -179,15 +180,7 @@ export class AuthService {
     return permissions[role] || [];
   }
 
-  async signupTenant(dto: {
-    businessName: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-    plan: string;
-    slug?: string;
-  }) {
+  async signupTenant(dto: CreateTenantDto) {
     // Check if email already exists
     const existingUser = await this.prisma.user.findUnique({
       where: { email: dto.email },
