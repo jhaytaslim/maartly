@@ -31,6 +31,10 @@ const config: Config = {
   coverageDirectory: "coverage",
   setupFilesAfterEnv: ["<rootDir>/test/setup.ts"],
   verbose: true,
+  testMatch: [
+    "<rootDir>/src/**/*.spec.ts",
+    "<rootDir>/test/integration/**/*.e2e-spec.ts",
+  ],
 };
 
 export default config;
