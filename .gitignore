@@ -52,7 +52,6 @@ next-env.d.ts
 
 # specials(temp)
 .actrc
-.github/
 .secrets
 frontend/docs/PACKAGING.MD
 frontend/scripts/build-all.sh
