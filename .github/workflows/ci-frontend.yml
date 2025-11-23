@@ -1,0 +1,83 @@
+name: Frontend CI/CD
+on:
+  push:
+    branches: [develop, staging, main]
+    paths: ["frontend/**"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+      - run: cd frontend && pnpm install --frozen-lockfile
+      - run: cd frontend && pnpm lint
+      - run: cd frontend && pnpm test # Vitest unit
+      - if: github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
+        run: cd frontend && npx playwright test # VRT
+
+  build:
+    needs: test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            target: windows
+          - os: ubuntu-latest
+            target: android
+          - os: macos-latest
+            target: ios
+    if: github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: pnpm/action-setup@v4
+      - run: cd frontend && pnpm install && pnpm build
+      - if: matrix.target == 'windows'
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }} # If signing
+        with:
+          tagName: app-v__VERSION__
+          releaseName: "Cognistock v__VERSION__"
+          releaseBody: "Release notes"
+          releaseDraft: true
+          prerelease: ${{ github.ref == 'refs/heads/staging' }}
+      - if: matrix.target == 'android'
+        run: |
+          cd frontend
+          echo ${{ secrets.ANDROID_KEYSTORE_BASE64 }} | base64 -d > keystore.jks
+          pnpm exec tauri android build -- --release
+      - if: matrix.target == 'ios'
+        run: |
+          cd frontend
+          echo ${{ secrets.IOS_CERTIFICATE_BASE64 }} | base64 -d > cert.p12
+          pnpm exec tauri ios build -- --release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tauri-${{ matrix.target }}
+          path: frontend/target/release/*.exe || frontend/target/release/*.apk || frontend/target/release/*.ipa
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            frontend/target/release/*.exe
+            frontend/target/release/*.apk
+            frontend/target/release/*.ipa
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
