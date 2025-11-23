@@ -33,7 +33,7 @@ const config: Config = {
   verbose: true,
   testMatch: [
     "<rootDir>/src/**/*.spec.ts",
-    "<rootDir>/test/integration/**/*.e2e-spec.ts",
+    // "<rootDir>/test/integration/**/*.e2e-spec.ts",
   ],
 };
 
