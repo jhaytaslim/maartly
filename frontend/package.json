@@ -13,7 +13,10 @@
     "test": "vitest",
     "tauri": "tauri",
     "tauri:dev": "pnpm tauri dev",
-    "tauri:build": "pnpm run build && pnpm tauri build"
+    "tauri:build": "pnpm run build && pnpm tauri build",
+    "playwright:test": "playwright test",
+    "playwright:test:headed": "playwright test --headed",
+    "playwright:test:diff": "npx playwright test --update-snapshots"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.1.2",
