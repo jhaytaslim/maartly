@@ -141,7 +141,6 @@ interface MainLayoutProps {
 }
 
 function MainLayout({ language, setLanguage, logout, user }: MainLayoutProps) {
-  // Get the current page from the URL parameter
   const { pageName } = useParams<{ pageName: PageType }>();
   const navigate = useNavigate();
 
