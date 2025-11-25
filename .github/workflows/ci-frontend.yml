@@ -120,9 +120,12 @@ jobs:
         with:
           name: tauri-${{ matrix.target }}
           path: |
+            # Windows executables
             frontend/src-tauri/target/release/*.exe
-            frontend/src-tauri/target/release/*.apk
-            frontend/src-tauri/target/release/*.aab
+            # Android builds
+            frontend/src-tauri/gen/android/app/build/outputs/apk/universal/release/*.apk
+            frontend/src-tauri/gen/android/app/build/outputs/bundle/universalRelease/*.aab
+            # iOS builds
             frontend/src-tauri/target/release/*.ipa
           if-no-files-found: ignore
 
