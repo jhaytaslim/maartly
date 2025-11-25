@@ -9,19 +9,18 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: frontend # Scope to frontend dir
+        working-directory: frontend # Auto-cd for all run steps
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
         with:
-          version: latest
-          working-directory: frontend # Points to frontend/pnpm-lock.yaml
+          version: latest # Global pnpm tool
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: "pnpm"
-          working-directory: frontend # Cache in frontend
-      - run: pnpm install --frozen-lockfile # Now finds lockfile
+          cache-dependency-path: "frontend/pnpm-lock.yaml" # Cache hashes subdir lockfile
+      - run: pnpm install --frozen-lockfile # Now in frontend dir, finds lockfile
       - run: pnpm lint
       - run: pnpm test # Vitest unit
       - if: github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
@@ -48,12 +47,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          working-directory: frontend
+          cache: "pnpm"
+          cache-dependency-path: "frontend/pnpm-lock.yaml"
       - uses: dtolnay/rust-toolchain@stable
       - uses: pnpm/action-setup@v4
         with:
           version: latest
-          working-directory: frontend
       - run: pnpm install && pnpm build
       - if: matrix.target == 'windows'
         uses: tauri-apps/tauri-action@v0

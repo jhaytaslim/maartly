@@ -9,27 +9,26 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: backend # Scope to backend dir
+        working-directory: backend # Auto-cd for all run steps
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
         with:
-          version: latest
-          working-directory: backend # Points to backend/pnpm-lock.yaml
+          version: latest # Global pnpm tool only
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: "pnpm"
-          working-directory: backend # Cache in backend
-      - run: pnpm install --frozen-lockfile # Now finds lockfile
-      - run: pnpm lint # Add ESLint if missing
+          cache-dependency-path: "backend/pnpm-lock.yaml" # Cache hashes subdir lockfile
+      - run: pnpm install --frozen-lockfile # Now in backend dir, finds lockfile
+      - run: pnpm lint
       - run: pnpm test:unit
       - if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/staging'
         run: pnpm test:integration
         env:
           DATABASE_URL: ${{ secrets.TEST_DB_URL }}
       - if: github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
-        run: npx playwright test # VRT
+        run: npx playwright test
         env:
           DATABASE_URL: ${{ secrets.TEST_DB_URL }}
 
@@ -45,11 +44,11 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           version: latest
-          working-directory: backend
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          working-directory: backend
+          cache: "pnpm"
+          cache-dependency-path: "backend/pnpm-lock.yaml"
       - run: pnpm install && pnpm build
       - uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -61,12 +60,11 @@ jobs:
           registry: 622022425414.dkr.ecr.us-east-1.amazonaws.com
       - run: |
           docker build -t 622022425414.dkr.ecr.us-east-1.amazonaws.com/maartly-backend:latest .
-          docker tag 622022425414.dkr.ecr.us-east-1.amazonaws.com/maartly-backend:latest 622022425414.dkr.ecr.us-east-1.amazonaws.com/maartly-backend:latest
           docker push 622022425414.dkr.ecr.us-east-1.amazonaws.com/maartly-backend:latest
       - name: Deploy to ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          task-definition: task-definition.json # Upload or inline JSON with new image
+          task-definition: task-definition.json # Or inline JSON
           service: maartly-service
           cluster: maartly-cluster-${{ github.ref_name }}
           wait-for-service-stability: true

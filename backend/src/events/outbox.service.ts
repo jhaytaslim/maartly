@@ -1,18 +1,18 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
-import { PrismaService } from '../prisma/prisma.service';
-import { RabbitMQService, EventMessage } from '../rabbitmq/rabbitmq.service';
-import { EventStatus } from '@prisma/client';
-import { getErrorMessage } from '../common/utils';
+import { Injectable, Logger } from "@nestjs/common";
+import { Cron, CronExpression } from "@nestjs/schedule";
+import { PrismaService } from "../prisma/prisma.service";
+import { RabbitMQService, EventMessage } from "../rabbitmq/rabbitmq.service";
+import { EventStatus } from "@prisma/client";
+import { getErrorMessage } from "../common/utils";
 
 @Injectable()
 export class OutboxService {
   private readonly logger = new Logger(OutboxService.name);
-  private readonly MAX_RETRIES = 5;
+  private readonly MAX_RETRIES = 6;
 
   constructor(
     private readonly prisma: PrismaService,
-    private readonly rabbitMQ: RabbitMQService,
+    private readonly rabbitMQ: RabbitMQService
   ) {}
 
   /**
@@ -23,7 +23,7 @@ export class OutboxService {
     aggregateId: string,
     aggregateType: string,
     eventType: string,
-    payload: any,
+    payload: any
   ): Promise<void> {
     try {
       await this.prisma.outboxEvent.create({
@@ -37,9 +37,11 @@ export class OutboxService {
         },
       });
 
-      this.logger.debug(`Created outbox event: ${aggregateType}.${eventType} for ${aggregateId}`);
+      this.logger.debug(
+        `Created outbox event: ${aggregateType}.${eventType} for ${aggregateId}`
+      );
     } catch (error) {
-      this.logger.error('Failed to create outbox event:', error);
+      this.logger.error("Failed to create outbox event:", error);
       throw error;
     }
   }
@@ -60,7 +62,7 @@ export class OutboxService {
         },
         take: 100,
         orderBy: {
-          createdAt: 'asc',
+          createdAt: "asc",
         },
       });
 
@@ -74,7 +76,7 @@ export class OutboxService {
         await this.processEvent(event);
       }
     } catch (error) {
-      this.logger.error('Error processing outbox events:', error);
+      this.logger.error("Error processing outbox events:", error);
     }
   }
 
@@ -122,7 +124,10 @@ export class OutboxService {
       await this.prisma.outboxEvent.update({
         where: { id: event.id },
         data: {
-          status: event.retryCount + 1 >= this.MAX_RETRIES ? EventStatus.FAILED : EventStatus.PENDING,
+          status:
+            event.retryCount + 1 >= this.MAX_RETRIES
+              ? EventStatus.FAILED
+              : EventStatus.PENDING,
           retryCount: {
             increment: 1,
           },
@@ -153,7 +158,7 @@ export class OutboxService {
 
       this.logger.log(`Cleaned up ${result.count} old outbox events`);
     } catch (error) {
-      this.logger.error('Error cleaning up old events:', error);
+      this.logger.error("Error cleaning up old events:", error);
     }
   }
 }

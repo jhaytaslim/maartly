@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import "@testing-library/jest-dom"; // Import here to extend expect with toBeInTheDocument, etc.
+import "@testing-library/jest-dom";
 import { SuppliersPage } from "@/pages/suppliers-page";
 import * as apiModule from "@/lib/api";
 
