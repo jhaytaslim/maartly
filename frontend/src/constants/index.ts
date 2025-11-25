@@ -17,3 +17,5 @@ export enum Page {
   VerifyAccount = "verify-account",
   CustomerStorefront = "customer-storefront",
 }
+
+export type PageType = `${Page}`;

@@ -29,6 +29,7 @@ jobs:
   build:
     needs: test
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 20 # Added: Job timeout to prevent runner cancels on heavy builds
     strategy:
       matrix:
         include:
@@ -52,11 +53,14 @@ jobs:
           node-version: 20
           cache: "pnpm"
           cache-dependency-path: "frontend/pnpm-lock.yaml"
-      - uses: dtolnay/rust-toolchain@stable # Moved after pnpm/setup-node for PATH on Windows
-      - run: pnpm install && pnpm build
+      - run: |
+          cd frontend  # Explicit cd for safety (Vite/Tauri context)
+          pnpm install && pnpm build  # Vite build (frontend package.json script)
+      - uses: dtolnay/rust-toolchain@stable # After pnpm for PATH
       - if: matrix.target == 'windows'
         uses: tauri-apps/tauri-action@v0
-        timeout-minutes: 30 # Added timeout to prevent cancel
+        working-directory: frontend # Explicit for tauri-action (prevents backend drift)
+        timeout-minutes: 15 # Per-step timeout for .exe build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -67,17 +71,20 @@ jobs:
           prerelease: ${{ github.ref == 'refs/heads/staging' }}
       - if: matrix.target == 'android'
         run: |
-          pnpm exec tauri android init  # Added: Init before build (generates Android project)
+          cd frontend
+          pnpm exec tauri android init  # Init generates Android project (idempotent)
           echo ${{ secrets.ANDROID_KEYSTORE_BASE64 }} | base64 -d > keystore.jks
           pnpm exec tauri android build -- --release
+        timeout-minutes: 15 # For Rust compile
       # - if: matrix.target == 'ios'
       #   run: |
+      #     cd frontend
       #     echo ${{ secrets.IOS_CERTIFICATE_BASE64 }} | base64 -d > cert.p12
       #     pnpm exec tauri ios build -- --release
       - uses: actions/upload-artifact@v4
         with:
           name: tauri-${{ matrix.target }}
-          path: target/release/*.exe || target/release/*.apk || target/release/*.ipa
+          path: frontend/target/release/*.exe || frontend/target/release/*.apk || frontend/target/release/*.ipa # Explicit frontend path
 
   release:
     needs: build
@@ -88,8 +95,8 @@ jobs:
       - uses: softprops/action-gh-release@v1
         with:
           files: |
-            target/release/*.exe
-            target/release/*.apk
-            target/release/*.ipa
+            frontend/target/release/*.exe
+            frontend/target/release/*.apk
+            frontend/target/release/*.ipa
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
