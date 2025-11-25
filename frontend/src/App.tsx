@@ -14,26 +14,7 @@ import {
   useNavigate,
   Navigate,
 } from "react-router-dom";
-
-export enum Page {
-  Dashboard = "dashboard",
-  POS = "pos",
-  Products = "products",
-  Categories = "categories",
-  Suppliers = "suppliers",
-  ProductTransfer = "product-transfer",
-  LowStockAlerts = "low-stock-alerts",
-  Orders = "orders",
-  TaxManagement = "tax-management",
-  PricingPlans = "pricing-plans",
-  Employees = "employees",
-  Customers = "customers",
-  Stores = "stores",
-  DebtManagement = "debt-management",
-  Settings = "settings",
-  VerifyAccount = "verify-account",
-  CustomerStorefront = "customer-storefront",
-}
+import { Page } from "./constants";
 
 export type PageType = `${Page}`;
 
