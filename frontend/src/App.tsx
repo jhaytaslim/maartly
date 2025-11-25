@@ -5,7 +5,6 @@ import { AppSidebar } from "@/components/ui/app-sidebar";
 import { TopBar } from "@/components/ui/top-bar";
 import { LandingPage } from "@/pages/landing-page";
 import { AuthProvider, useAuth } from "@/lib/auth-context";
-// import { canAccessPage } from "@/lib/permissions";
 import { canAccessPage } from "@/lib/permissions";
 import {
   BrowserRouter,

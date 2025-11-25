@@ -22,6 +22,7 @@ jobs:
           cache-dependency-path: "backend/pnpm-lock.yaml" # Cache hashes subdir lockfile
       - run: pnpm install --frozen-lockfile # Now in backend dir, finds lockfile
       # - run: pnpm lint
+      - run: pnpm prisma:generate
       - run: pnpm test:unit
       # - if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/staging'
       #   run: pnpm test:integration
@@ -49,7 +50,7 @@ jobs:
           node-version: 20
           cache: "pnpm"
           cache-dependency-path: "backend/pnpm-lock.yaml"
-      - run: pnpm install && pnpm build
+      - run: pnpm install && pnpm prisma:generate && pnpm build
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
