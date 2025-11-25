@@ -33,8 +33,8 @@ import {
 import { Badge } from "./badge";
 import { useState, useMemo } from "react";
 import { UserRole, canAccessPage } from "../../lib/permissions";
-import { PageType } from "@/App";
 import { useAuth } from "@/lib/auth-context";
+import { PageType } from "@/constants";
 
 interface AppSidebarProps {
   currentPage: PageType;
