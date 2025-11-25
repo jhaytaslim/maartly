@@ -172,8 +172,6 @@ function MainLayout({ language, setLanguage, logout, user }: MainLayoutProps) {
     );
   }
 
-  // --- Page Rendering (O(1) Lookup Logic) ---
-
   const Component = PageComponents[currentPage];
 
   const CurrentPageRenderer =
