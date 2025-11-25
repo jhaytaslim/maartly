@@ -137,7 +137,7 @@ interface MainLayoutProps {
   language: "en" | "es" | "fr";
   setLanguage: (lang: "en" | "es" | "fr") => void;
   logout: () => void;
-  user: any; // Ideally a proper User type
+  user: any;
 }
 
 function MainLayout({ language, setLanguage, logout, user }: MainLayoutProps) {
