@@ -3,7 +3,6 @@ on:
   push:
     branches: [develop, staging, main]
     paths: ["frontend/**", "tests/**"]
-
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -25,7 +24,6 @@ jobs:
       # - run: pnpm test # Vitest unit
       # - if: github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
       #   run: npx playwright test # VRT
-
   build:
     needs: test
     runs-on: ${{ matrix.os }}
@@ -37,7 +35,7 @@ jobs:
             target: windows
           - os: ubuntu-latest
             target: android
-          # - os: macos-latest  # Commented: iOS cancels on free macOS (Xcode timeout); test local or uncomment for paid runner
+          # - os: macos-latest # Commented: iOS cancels on free macOS (Xcode timeout); test local or uncomment for paid runner
           #   target: ios
     defaults:
       run:
@@ -54,8 +52,8 @@ jobs:
           cache: "pnpm"
           cache-dependency-path: "frontend/pnpm-lock.yaml"
       - run: |
-          cd frontend  # Explicit cd for safety (Vite/Tauri context)
-          pnpm install && pnpm build  # Vite build (frontend package.json script)
+          cd frontend # Explicit cd for safety (Vite/Tauri context)
+          pnpm install && pnpm build # Vite build (frontend package.json script)
       - uses: dtolnay/rust-toolchain@stable # After pnpm for PATH
       - if: matrix.target == 'windows'
         uses: tauri-apps/tauri-action@v0
@@ -72,7 +70,7 @@ jobs:
       - if: matrix.target == 'android'
         run: |
           cd frontend
-          pnpm exec tauri android init  # Init generates Android project (idempotent)
+          pnpm exec tauri android init # Init generates Android project (idempotent)
           echo ${{ secrets.ANDROID_KEYSTORE_BASE64 }} | base64 -d > keystore.jks
           pnpm exec tauri android build -- --release
         timeout-minutes: 15 # For Rust compile
@@ -85,7 +83,6 @@ jobs:
         with:
           name: tauri-${{ matrix.target }}
           path: frontend/target/release/*.exe || frontend/target/release/*.apk || frontend/target/release/*.ipa # Explicit frontend path
-
   release:
     needs: build
     runs-on: ubuntu-latest
