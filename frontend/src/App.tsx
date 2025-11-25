@@ -145,7 +145,6 @@ function MainLayout({ language, setLanguage, logout, user }: MainLayoutProps) {
   const { pageName } = useParams<{ pageName: PageType }>();
   const navigate = useNavigate();
 
-  // Determine the current page, falling back to Dashboard if the URL parameter is invalid
   const currentPage: PageType =
     pageName && PageComponents[pageName] ? pageName : Page.Dashboard;
 
