@@ -22,8 +22,6 @@ const excludedPages: PageType[] = [
   Page.CustomerStorefront,
 ] as const;
 
-// --- DYNAMIC PAGE MAP (The new, centralized, and scalable logic) ---
-
 // Define a type for the component loader functions
 type LazyComponent = React.LazyExoticComponent<React.ComponentType<any>>;
 // Map of page keys to their lazy-loaded component
@@ -128,8 +126,6 @@ const LoadingFallback = memo(() => (
 ));
 
 LoadingFallback.displayName = "LoadingFallback";
-
-// --- Page Renderer Function (replaces the switch statement) ---
 
 // interface PageRendererProps {
 //   currentPage: PageType;
