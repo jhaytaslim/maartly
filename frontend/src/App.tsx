@@ -15,8 +15,6 @@ import {
   Navigate,
 } from "react-router-dom";
 
-// --- ENUM & TYPES (Moved to a separate file in a real app) ---
-
 export enum Page {
   Dashboard = "dashboard",
   POS = "pos",
