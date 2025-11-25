@@ -175,7 +175,6 @@ function MainLayout({ language, setLanguage, logout, user }: MainLayoutProps) {
   const Component = PageComponents[currentPage];
 
   const CurrentPageRenderer =
-    // Handle conditional props for SettingsPage
     currentPage === Page.Settings ? (
       <Component language={language} setLanguage={setLanguage} />
     ) : (
