@@ -55,3 +55,4 @@ next-env.d.ts
 .secrets
 frontend/docs/PACKAGING.MD
 frontend/scripts/build-all.sh
+.github/*.yml

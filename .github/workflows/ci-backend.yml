@@ -2,43 +2,55 @@ name: Backend CI/CD
 on:
   push:
     branches: [develop, staging, main]
-    paths: ["backend/**", ".env.sample"]
+    paths: ["backend/**", "test/**", ".env.sample"]
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend # Scope to backend dir
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
         with:
           version: latest
+          working-directory: backend # Points to backend/pnpm-lock.yaml
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: "pnpm"
-      - run: cd backend && pnpm install --frozen-lockfile
-      - run: cd backend && pnpm lint # Add ESLint if missing
-      - run: cd backend && pnpm test:unit
+          working-directory: backend # Cache in backend
+      - run: pnpm install --frozen-lockfile # Now finds lockfile
+      - run: pnpm lint # Add ESLint if missing
+      - run: pnpm test:unit
       - if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/staging'
-        run: cd backend && pnpm test:integration
+        run: pnpm test:integration
         env:
           DATABASE_URL: ${{ secrets.TEST_DB_URL }}
       - if: github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
-        run: cd backend && npx playwright test # VRT
+        run: npx playwright test # VRT
         env:
           DATABASE_URL: ${{ secrets.TEST_DB_URL }}
 
   build-deploy:
     needs: test
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
     if: github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
+        with:
+          version: latest
+          working-directory: backend
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: cd backend && pnpm install && pnpm build
+          working-directory: backend
+      - run: pnpm install && pnpm build
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -48,22 +60,20 @@ jobs:
         with:
           registry: 622022425414.dkr.ecr.us-east-1.amazonaws.com
       - run: |
-          cd backend
-          docker build -t cognistock-backend .
-          docker tag cognistock-backend:latest 622022425414.dkr.ecr.us-east-1.amazonaws.com/cognistock-backend:latest
-          docker push 622022425414.dkr.ecr.us-east-1.amazonaws.com/cognistock-backend:latest
+          docker build -t 622022425414.dkr.ecr.us-east-1.amazonaws.com/maartly-backend:latest .
+          docker tag 622022425414.dkr.ecr.us-east-1.amazonaws.com/maartly-backend:latest 622022425414.dkr.ecr.us-east-1.amazonaws.com/maartly-backend:latest
+          docker push 622022425414.dkr.ecr.us-east-1.amazonaws.com/maartly-backend:latest
       - name: Deploy to ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          task-definition: task-definition.json # Local file; update image
-          service: cognistock-service
-          cluster: cognistock-cluster-${{ github.ref_name }} # staging/main
+          task-definition: task-definition.json # Upload or inline JSON with new image
+          service: maartly-service
+          cluster: maartly-cluster-${{ github.ref_name }}
           wait-for-service-stability: true
 
   load-test:
     needs: build-deploy
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
       - name: Install k6
@@ -71,14 +81,11 @@ jobs:
           wget https://github.com/grafana/k6/releases/download/v0.53.0/k6-v0.53.0-linux-amd64.tar.gz
           tar xzf k6-v0.53.0-linux-amd64.tar.gz
           sudo mv k6-v0.53.0-linux-amd64/k6 /usr/local/bin/
-      - run: ./k6 run load-test.js
+      - run: k6 run load-test.js
         env:
           K6_VUS: 200
           K6_DURATION: 2m
           BASE_URL: ${{ secrets.STAGING_ALB_URL }}
-          DATABASE_URL: ${{ secrets.TEST_DB_URL }}
-      - if: failure()
-        run: exit 1 # Fail workflow on thresholds
       - uses: actions/upload-artifact@v4
         with:
           name: k6-results
