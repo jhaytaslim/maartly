@@ -66,7 +66,7 @@ jobs:
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: backend/task-definition.json # Path to file in backend/
-          service: maartly-service
+          service: maartly-backend-e1be #maartly-service
           cluster: maartly-cluster
           wait-for-service-stability: true
 
