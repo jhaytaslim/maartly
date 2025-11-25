@@ -3,9 +3,11 @@ import {
   NotFoundException,
   ForbiddenException,
   BadRequestException,
-} from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { UserRole } from '@prisma/client';
+  Body,
+} from "@nestjs/common";
+import { PrismaService } from "../prisma/prisma.service";
+import { UserRole } from "@prisma/client";
+import { CreateSupplierDto } from "./dtos/create-supplier.dto";
 
 @Injectable()
 export class SuppliersService {
@@ -30,7 +32,7 @@ export class SuppliersService {
         },
       },
       orderBy: {
-        createdAt: 'desc',
+        createdAt: "desc",
       },
     });
   }
@@ -50,20 +52,23 @@ export class SuppliersService {
     });
 
     if (!supplier) {
-      throw new NotFoundException('Supplier not found');
+      throw new NotFoundException("Supplier not found");
     }
 
     if (userRole !== UserRole.SUPER_ADMIN && supplier.tenantId !== tenantId) {
-      throw new ForbiddenException('Access denied');
+      throw new ForbiddenException("Access denied");
     }
 
     return supplier;
   }
 
-  async create(data: any, tenantId: string) {
+  async create(data: CreateSupplierDto, tenantId: string) {
+    console.log("Creating supplier with data:", data, "for tena:", tenantId);
+    const { contact: contactPerson, ...supplierData } = data;
     return this.prisma.supplier.create({
       data: {
-        ...data,
+        ...supplierData,
+        contactPerson,
         tenantId,
       },
     });
@@ -73,11 +78,11 @@ export class SuppliersService {
     const supplier = await this.prisma.supplier.findUnique({ where: { id } });
 
     if (!supplier) {
-      throw new NotFoundException('Supplier not found');
+      throw new NotFoundException("Supplier not found");
     }
 
     if (userRole !== UserRole.SUPER_ADMIN && supplier.tenantId !== tenantId) {
-      throw new ForbiddenException('Access denied');
+      throw new ForbiddenException("Access denied");
     }
 
     return this.prisma.supplier.update({
@@ -90,17 +95,17 @@ export class SuppliersService {
     const supplier = await this.prisma.supplier.findUnique({ where: { id } });
 
     if (!supplier) {
-      throw new NotFoundException('Supplier not found');
+      throw new NotFoundException("Supplier not found");
     }
 
     if (userRole !== UserRole.SUPER_ADMIN && supplier.tenantId !== tenantId) {
-      throw new ForbiddenException('Access denied');
+      throw new ForbiddenException("Access denied");
     }
 
     await this.prisma.supplier.delete({
       where: { id },
     });
 
-    return { message: 'Supplier deleted successfully' };
+    return { message: "Supplier deleted successfully" };
   }
 }

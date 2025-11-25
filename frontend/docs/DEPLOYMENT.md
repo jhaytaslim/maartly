@@ -1,6 +1,6 @@
-# Deployment Guide for Stockly
+# Deployment Guide for Maartly
 
-This guide covers deploying Stockly to various platforms.
+This guide covers deploying Maartly to various platforms.
 
 ## 📦 Prerequisites
 
@@ -159,10 +159,10 @@ server {
 **Build and Run:**
 ```bash
 # Build image
-docker build -t stockly .
+docker build -t maartly .
 
 # Run container
-docker run -p 80:80 stockly
+docker run -p 80:80 maartly
 ```
 
 ### 6. Traditional Web Hosting (cPanel, etc.)
@@ -269,7 +269,7 @@ Before deploying to production:
 
 ## 📱 Progressive Web App (PWA)
 
-To make Stockly installable:
+To make Maartly installable:
 
 1. Install vite-plugin-pwa:
    ```bash
@@ -286,8 +286,8 @@ To make Stockly installable:
      VitePWA({
        registerType: 'autoUpdate',
        manifest: {
-         name: 'Stockly Inventory',
-         short_name: 'Stockly',
+         name: 'Maartly Inventory',
+         short_name: 'Maartly',
          description: 'Inventory Management System',
          theme_color: '#030213',
          icons: [

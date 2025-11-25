@@ -1,4 +1,4 @@
-# 🎉 Cognistock Integration Status
+# 🎉 Maartly Integration Status
 
 ## ✅ BACKEND INTEGRATION COMPLETE
 
@@ -219,17 +219,17 @@ chmod +x test-api.sh
 docker ps
 
 # Should show:
-# - cognistock-mongodb (port 27017)
-# - cognistock-redis (port 6379)
-# - cognistock-rabbitmq (ports 5672, 15672)
-# - cognistock-mongo-express (port 8081)
+# - maartly-mongodb (port 27017)
+# - maartly-redis (port 6379)
+# - maartly-rabbitmq (ports 5672, 15672)
+# - maartly-mongo-express (port 8081)
 ```
 
 ### Access Management UIs:
 
 | Service | URL | Credentials |
 |---------|-----|-------------|
-| RabbitMQ Management | http://localhost:15672 | cognistock / cognistock_rabbitmq_password |
+| RabbitMQ Management | http://localhost:15672 | maartly / maartly_rabbitmq_password |
 | Mongo Express | http://localhost:8081 | admin / admin123 |
 
 ---
@@ -270,7 +270,7 @@ docker ps
 
 1. **MongoDB** - Database
    - Port: 27017
-   - Connection: `mongodb://localhost:27017/cognistock`
+   - Connection: `mongodb://localhost:27017/maartly`
 
 2. **Redis** - Cache & Sessions
    - Port: 6379
@@ -285,7 +285,7 @@ docker ps
 
 ```env
 # Minimum required for development
-DATABASE_URL="mongodb://localhost:27017/cognistock"
+DATABASE_URL="mongodb://localhost:27017/maartly"
 JWT_SECRET="your-secret-key-min-32-chars"
 JWT_REFRESH_SECRET="your-refresh-secret-min-32-chars"
 REDIS_HOST=localhost
@@ -385,7 +385,7 @@ None currently! 🎉
 
 ## 🎉 Celebration!
 
-**The Cognistock backend is now fully integrated!** 🚀
+**The Maartly backend is now fully integrated!** 🚀
 
 All modules are connected, tested, and ready for frontend integration. You have:
 

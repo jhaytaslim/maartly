@@ -32,6 +32,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.sample
 
 # vercel
 .vercel
@@ -46,3 +47,12 @@ next-env.d.ts
 .cursorignore
 
 **/dist
+**/zagent
+**/.mongodb-binaries
+
+# specials(temp)
+.actrc
+.secrets
+frontend/docs/PACKAGING.MD
+frontend/scripts/build-all.sh
+.github/*.yml

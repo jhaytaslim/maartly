@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Cognistock Integration Test Script
+# Maartly Integration Test Script
 # This script tests the connection between frontend and backend
 
-echo "🚀 Cognistock Integration Test"
+echo "🚀 Maartly Integration Test"
 echo "================================"
 echo ""
 

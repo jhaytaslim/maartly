@@ -1,4 +1,4 @@
-# 🚀 Martly Backend - Quick Setup Guide
+# 🚀 Maartly Backend - Quick Setup Guide
 
 ## Prerequisites
 
@@ -38,7 +38,7 @@ Edit `.env` file:
 
 ```env
 # Database (REQUIRED)
-DATABASE_URL="mongodb://localhost:27017/martly"
+DATABASE_URL="mongodb://localhost:27017/maartly"
 
 # JWT (REQUIRED - Change this!)
 JWT_SECRET="CHANGE-THIS-TO-A-SECURE-RANDOM-STRING-MIN-32-CHARS"
@@ -64,7 +64,7 @@ SMTP_PORT=587
 SMTP_SECURE=false
 SMTP_USER="your-email@gmail.com"
 SMTP_PASS="your-gmail-app-password"  # Not your regular password!
-EMAIL_FROM="noreply@martly.com"
+EMAIL_FROM="noreply@maartly.com"
 ```
 
 **Get Gmail App Password:**
@@ -115,7 +115,7 @@ sudo systemctl start mongod            # Linux
 
 **Connection String:**
 ```env
-DATABASE_URL="mongodb://localhost:27017/martly"
+DATABASE_URL="mongodb://localhost:27017/maartly"
 ```
 
 ### Option 2: MongoDB Atlas (Cloud - Recommended for Production)
@@ -126,7 +126,7 @@ DATABASE_URL="mongodb://localhost:27017/martly"
 4. Update .env:
 
 ```env
-DATABASE_URL="mongodb+srv://username:password@cluster.mongodb.net/martly?retryWrites=true&w=majority"
+DATABASE_URL="mongodb+srv://username:password@cluster.mongodb.net/maartly?retryWrites=true&w=majority"
 ```
 
 ### Option 3: Docker
@@ -136,7 +136,7 @@ DATABASE_URL="mongodb+srv://username:password@cluster.mongodb.net/martly?retryWr
 docker run -d -p 27017:27017 --name mongodb mongo:6.0
 
 # Connection string
-DATABASE_URL="mongodb://localhost:27017/martly"
+DATABASE_URL="mongodb://localhost:27017/maartly"
 ```
 
 ## 🔴 Redis Setup
@@ -395,6 +395,6 @@ View schema: `backend/prisma/schema.prisma`
 
 **Backend setup complete!** 🎉
 
-Now start the frontend and begin building your business with Martly.
+Now start the frontend and begin building your business with Maartly.
 
 *Smart Sales. Simple Control.*

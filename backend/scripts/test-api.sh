@@ -1,13 +1,13 @@
 #!/bin/bash
 
-# Cognistock API Testing Script
+# Maartly API Testing Script
 # This script tests all major endpoints of the backend
 
 BASE_URL="http://localhost:3000/api/v1"
-ADMIN_EMAIL="admin@cognistock.com"
+ADMIN_EMAIL="admin@maartly.com"
 ADMIN_PASSWORD="SecurePassword123!"
 
-echo "🚀 Starting Cognistock API Tests..."
+echo "🚀 Starting Maartly API Tests..."
 echo ""
 
 # Colors for output

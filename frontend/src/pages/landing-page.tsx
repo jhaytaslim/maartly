@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
@@ -44,6 +44,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "../components/ui/tabs";
+import { useTauriEnv } from "@/lib/tauri-env";
 
 const pricingPlans = [
   {
@@ -148,7 +149,7 @@ const testimonials = [
     name: "Sarah Johnson",
     role: "Store Manager, RetailPro",
     content:
-      "Cognistock transformed our inventory management. We reduced stockouts by 85% and increased efficiency by 60%.",
+      "Maartly transformed our inventory management. We reduced stockouts by 85% and increased efficiency by 60%.",
     rating: 5,
   },
   {
@@ -257,6 +258,10 @@ export function LandingPage() {
     }
   };
 
+  // const isDesktop = useIsDesktop();
+  const { isDesktop, osPlatform } = useTauriEnv();
+  console.log("Running on:", isDesktop ? osPlatform : "web", isDesktop);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}
@@ -266,7 +271,7 @@ export function LandingPage() {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
               <Package className="h-5 w-5 text-primary-foreground" />
             </div>
-            <span className="text-xl font-semibold">Cognistock</span>
+            <span className="text-xl font-semibold">Maartly</span>
           </div>
           <div className="hidden md:flex items-center gap-6">
             <a href="#features" className="text-sm hover:text-primary">
@@ -281,10 +286,18 @@ export function LandingPage() {
             <Button variant="ghost" onClick={() => setIsLoginOpen(true)}>
               Login
             </Button>
-            <Button onClick={() => setIsSignupOpen(true)}>Get Started</Button>
+            {!isDesktop && (
+              <Button onClick={() => setIsSignupOpen(true)}>Get Started</Button>
+            )}
           </div>
           <div className="md:hidden">
-            <Button onClick={() => setIsSignupOpen(true)}>Get Started</Button>
+            {isDesktop ? (
+              <Button variant="ghost" onClick={() => setIsLoginOpen(true)}>
+                Login
+              </Button>
+            ) : (
+              <Button onClick={() => setIsSignupOpen(true)}>Get Started</Button>
+            )}
           </div>
         </div>
       </nav>
@@ -591,7 +604,7 @@ export function LandingPage() {
               Loved by businesses worldwide
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              See what our customers have to say about Cognistock
+              See what our customers have to say about Maartly
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
@@ -629,8 +642,8 @@ export function LandingPage() {
             Ready to transform your business?
           </h2>
           <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-            Join thousands of businesses using Cognistock to streamline
-            operations and boost growth
+            Join thousands of businesses using Maartly to streamline operations
+            and boost growth
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
@@ -664,7 +677,7 @@ export function LandingPage() {
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
                   <Package className="h-5 w-5 text-primary-foreground" />
                 </div>
-                <span className="text-xl font-semibold">Cognistock</span>
+                <span className="text-xl font-semibold">Maartly</span>
               </div>
               <p className="text-sm text-muted-foreground">
                 Complete inventory management solution for modern businesses
@@ -744,7 +757,7 @@ export function LandingPage() {
           <Separator className="my-8" />
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-muted-foreground">
-              © 2024 Cognistock. All rights reserved.
+              © 2024 Maartly. All rights reserved.
             </p>
             <div className="flex gap-4">
               <a
@@ -872,7 +885,7 @@ export function LandingPage() {
               <p className="text-xs text-muted-foreground">
                 Your store will be available at:{" "}
                 <span className="font-mono">
-                  {signupData.slug || "your-slug"}.cognistock.com
+                  {signupData.slug || "your-slug"}.maartly.com
                 </span>
                 {!signupData.slug && (
                   <span className="block mt-1">
@@ -917,9 +930,7 @@ export function LandingPage() {
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>Welcome Back</DialogTitle>
-            <DialogDescription>
-              Login to your Cognistock account
-            </DialogDescription>
+            <DialogDescription>Login to your Maartly account</DialogDescription>
           </DialogHeader>
           {error && (
             <Alert variant="destructive">

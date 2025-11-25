@@ -16,16 +16,17 @@
 
     /* Linting */
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    // "noUnusedLocals": true,
+    // "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
 
     /* Path mapping */
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "types": ["vite/client", "vitest/globals", "node"]
   },
-  "include": ["src"],
+  "include": ["src", "src/**/*", "tests/**/*", "eslint.config.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

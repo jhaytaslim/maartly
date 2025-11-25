@@ -110,7 +110,7 @@ export function EmployeesPage() {
                   <Input
                     id="email"
                     type="email"
-                    placeholder="employee@stockly.com"
+                    placeholder="employee@maartly.com"
                   />
                 </div>
               </div>

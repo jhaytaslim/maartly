@@ -15,6 +15,7 @@ import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { RolesGuard } from "../auth/guards/roles.guard";
 import { Roles } from "../auth/decorators/roles.decorator";
 import { UserRole } from "@prisma/client";
+import { CreateSupplierDto } from "./dtos/create-supplier.dto";
 
 @ApiTags("suppliers")
 @ApiBearerAuth()
@@ -35,7 +36,7 @@ export class SuppliersController {
 
   @Post()
   @Roles(UserRole.SUPER_ADMIN, UserRole.TENANT_ADMIN, UserRole.STORE_MANAGER)
-  async create(@Body() data: any, @Request() req: any) {
+  async create(@Body() data: CreateSupplierDto, @Request() req: any) {
     return this.suppliersService.create(data, req.user.tenantId);
   }
 

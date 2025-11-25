@@ -1,6 +1,6 @@
-# ✅ Cognistock Testing Checklist
+# ✅ Maartly Testing Checklist
 
-Use this checklist to systematically test all features of the Cognistock system.
+Use this checklist to systematically test all features of the Maartly system.
 
 **Testing Date**: _____________  
 **Tester Name**: _____________  

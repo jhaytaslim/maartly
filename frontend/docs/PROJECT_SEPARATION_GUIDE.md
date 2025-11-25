@@ -1,11 +1,11 @@
 # 🔧 Separating Frontend and Backend Projects
 
-This guide explains how to split the Martly system into two separate deployable projects.
+This guide explains how to split the Maartly system into two separate deployable projects.
 
 ## 📁 Current Structure
 
 ```
-martly-complete-system/
+maartly-complete-system/
 ├── backend/           # NestJS API
 ├── frontend files/    # React app (root level)
 └── docs/             # Documentation
@@ -14,10 +14,10 @@ martly-complete-system/
 ## 🎯 Goal: Two Separate Projects
 
 ```
-martly-backend/        # Standalone backend
+maartly-backend/        # Standalone backend
 └── (backend files)
 
-martly-frontend/       # Standalone frontend
+maartly-frontend/       # Standalone frontend
 └── (frontend files)
 ```
 
@@ -29,16 +29,16 @@ martly-frontend/       # Standalone frontend
 
 ```bash
 # Create project folders
-mkdir martly-backend
-mkdir martly-frontend
+mkdir maartly-backend
+mkdir maartly-frontend
 ```
 
 ### Step 2: Setup Backend Project
 
 ```bash
 # Copy backend files
-cp -r backend/* martly-backend/
-cd martly-backend
+cp -r backend/* maartly-backend/
+cd maartly-backend
 
 # Initialize git
 git init
@@ -64,8 +64,8 @@ npm run start:dev
 ```bash
 # Copy frontend files (from root)
 cd ..
-cp -r !(backend|martly-backend|martly-frontend|node_modules) martly-frontend/
-cd martly-frontend
+cp -r !(backend|maartly-backend|maartly-frontend|node_modules) maartly-frontend/
+cd maartly-frontend
 
 # Initialize git
 git init
@@ -127,15 +127,15 @@ app.enableCors({
 ```bash
 # Backend
 git subtree split --prefix=backend -b backend-branch
-mkdir martly-backend
-cd martly-backend
+mkdir maartly-backend
+cd maartly-backend
 git init
 git pull ../your-repo backend-branch
 
 # Frontend  
 git subtree split --prefix=. --rejoin -b frontend-branch
-mkdir martly-frontend
-cd martly-frontend
+mkdir maartly-frontend
+cd maartly-frontend
 git init
 git pull ../your-repo frontend-branch
 ```
@@ -327,14 +327,14 @@ VITE_API_URL=https://your-backend.railway.app/api/v1
 
 **Terminal 1 (Backend):**
 ```bash
-cd martly-backend
+cd maartly-backend
 npm run start:dev
 # Running on http://localhost:3001
 ```
 
 **Terminal 2 (Frontend):**
 ```bash
-cd martly-frontend
+cd maartly-frontend
 npm run dev
 # Running on http://localhost:5173
 ```
@@ -362,10 +362,10 @@ npm run dev
 
 ```bash
 # Backend repo
-https://github.com/your-org/martly-backend
+https://github.com/your-org/maartly-backend
 
 # Frontend repo
-https://github.com/your-org/martly-frontend
+https://github.com/your-org/maartly-frontend
 ```
 
 ---
@@ -375,19 +375,19 @@ https://github.com/your-org/martly-frontend
 ### Recommended Setup
 
 ```
-Backend API:     https://api.martly.com
-Frontend App:    https://app.martly.com
-Marketing Site:  https://martly.com
-Documentation:   https://docs.martly.com
+Backend API:     https://api.maartly.com
+Frontend App:    https://app.maartly.com
+Marketing Site:  https://maartly.com
+Documentation:   https://docs.maartly.com
 ```
 
 ### DNS Configuration
 
 ```
-A Record:        martly.com → Landing page server
-CNAME:           app.martly.com → Vercel
-CNAME:           api.martly.com → Railway
-CNAME:           docs.martly.com → Vercel/GitBook
+A Record:        maartly.com → Landing page server
+CNAME:           app.maartly.com → Vercel
+CNAME:           api.maartly.com → Railway
+CNAME:           docs.maartly.com → Vercel/GitBook
 ```
 
 ---
@@ -442,12 +442,12 @@ const response = await fetch(`${API_URL}/endpoint`, {
 
 1. **Backend alone:**
 ```bash
-curl https://api.martly.com/api/v1/health
+curl https://api.maartly.com/api/v1/health
 ```
 
 2. **Frontend alone:**
 ```bash
-# Visit https://app.martly.com
+# Visit https://app.maartly.com
 # Should load landing page
 ```
 
@@ -501,10 +501,10 @@ npm run build
 
 ## 📚 Recommended Project Structure
 
-### martly-backend/
+### maartly-backend/
 
 ```
-martly-backend/
+maartly-backend/
 ├── src/
 ├── prisma/
 ├── test/
@@ -517,10 +517,10 @@ martly-backend/
 └── SETUP.md
 ```
 
-### martly-frontend/
+### maartly-frontend/
 
 ```
-martly-frontend/
+maartly-frontend/
 ├── src/
 ├── components/
 ├── lib/
@@ -555,6 +555,6 @@ You now have:
 
 ---
 
-**Martly** - Smart Sales. Simple Control. 🚀
+**Maartly** - Smart Sales. Simple Control. 🚀
 
 *Now with fully separated, independently deployable projects!*

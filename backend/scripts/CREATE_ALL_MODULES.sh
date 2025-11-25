@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# This script creates all missing backend modules for Martly
+# This script creates all missing backend modules for Maartly
 # Run this from the backend directory: bash CREATE_ALL_MODULES.sh
 
-echo "🚀 Creating all Martly backend modules..."
+echo "🚀 Creating all Maartly backend modules..."
 
 # Create Stores Module
 echo "📦 Creating Stores Module..."

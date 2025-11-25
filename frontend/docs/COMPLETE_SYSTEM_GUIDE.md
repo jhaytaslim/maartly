@@ -1,4 +1,4 @@
-# 🎯 Martly - Complete System Guide v2.0
+# 🎯 Maartly - Complete System Guide v2.0
 
 **Smart Sales. Simple Control.**
 
@@ -23,7 +23,7 @@ A comprehensive, production-ready inventory management system with complete back
 
 ## 🎯 System Overview
 
-Martly is an enterprise-grade point-of-sale and inventory management system designed for modern businesses. The system supports multi-tenancy, offline operations, and comprehensive role-based permissions.
+Maartly is an enterprise-grade point-of-sale and inventory management system designed for modern businesses. The system supports multi-tenancy, offline operations, and comprehensive role-based permissions.
 
 ### Key Features
 
@@ -36,7 +36,7 @@ Martly is an enterprise-grade point-of-sale and inventory management system desi
 ✅ **Real-time Analytics** - Role-based dashboards  
 ✅ **Redis Caching** - High-performance data access  
 ✅ **Mobile Responsive** - Works on all devices  
-✅ **Professional Branding** - Martly design system  
+✅ **Professional Branding** - Maartly design system  
 
 ---
 
@@ -65,7 +65,7 @@ Martly is an enterprise-grade point-of-sale and inventory management system desi
 ### Project Structure
 
 ```
-martly-complete-system/
+maartly-complete-system/
 ├── backend/                 # NestJS API
 │   ├── prisma/             # Database schema
 │   ├── src/
@@ -92,7 +92,7 @@ martly-complete-system/
 
 ## 🔐 Role-Based Access Control
 
-### 1. SuperAdmin (Martly Internal Staff)
+### 1. SuperAdmin (Maartly Internal Staff)
 
 **Full Platform Control**
 
@@ -222,7 +222,7 @@ Use Cases:
 ```bash
 # 1. Clone repository
 git clone <repository-url>
-cd martly-complete-system
+cd maartly-complete-system
 
 # 2. Setup Backend
 cd backend
@@ -265,7 +265,7 @@ Edit `.env`:
 
 ```env
 # Database
-DATABASE_URL="mongodb://localhost:27017/martly"
+DATABASE_URL="mongodb://localhost:27017/maartly"
 
 # JWT
 JWT_SECRET="your-super-secret-jwt-key-min-32-chars"
@@ -281,7 +281,7 @@ SMTP_PORT=587
 SMTP_SECURE=false
 SMTP_USER="your-email@gmail.com"
 SMTP_PASS="your-gmail-app-password"
-EMAIL_FROM="noreply@martly.com"
+EMAIL_FROM="noreply@maartly.com"
 
 # SMS (Twilio)
 TWILIO_ACCOUNT_SID="your-twilio-sid"
@@ -621,8 +621,8 @@ CMD ["npm", "run", "start:prod"]
 ```
 
 ```bash
-docker build -t martly-backend .
-docker run -p 3001:3001 --env-file .env martly-backend
+docker build -t maartly-backend .
+docker run -p 3001:3001 --env-file .env maartly-backend
 ```
 
 **Option 2: Railway/Render/Heroku**
@@ -809,6 +809,6 @@ npm run prisma:studio
 
 ---
 
-**Martly v2.0** - Smart Sales. Simple Control. 🚀
+**Maartly v2.0** - Smart Sales. Simple Control. 🚀
 
 *Enterprise-grade inventory management for modern businesses.*

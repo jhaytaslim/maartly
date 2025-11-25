@@ -23,6 +23,9 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "test"]
+  "include": ["src/**/*", "test/global.d.ts"],
+  "exclude": ["node_modules", "dist"],
+  "ts-node": {
+    "esm": false
+  }
 }

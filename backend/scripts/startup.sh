@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Cognistock Backend Startup Script
+# Maartly Backend Startup Script
 # This script handles the complete setup and startup of the backend
 
 set -e  # Exit on error
@@ -37,7 +37,7 @@ print_info() {
 clear
 echo "╔════════════════════════════════════════════════════════════╗"
 echo "║                                                            ║"
-echo "║              🚀 COGNISTOCK BACKEND SETUP 🚀               ║"
+echo "║              🚀 maartly BACKEND SETUP 🚀               ║"
 echo "║                                                            ║"
 echo "║         Inventory Management System Backend v1.0           ║"
 echo "║                                                            ║"
@@ -107,21 +107,21 @@ sleep 5
 # Check if services are running
 print_info "Checking service status..."
 
-if docker ps | grep -q "cognistock-mongodb"; then
+if docker ps | grep -q "maartly-mongodb"; then
     print_success "MongoDB is running"
 else
     print_error "MongoDB failed to start"
     exit 1
 fi
 
-if docker ps | grep -q "cognistock-redis"; then
+if docker ps | grep -q "maartly-redis"; then
     print_success "Redis is running"
 else
     print_error "Redis failed to start"
     exit 1
 fi
 
-if docker ps | grep -q "cognistock-rabbitmq"; then
+if docker ps | grep -q "maartly-rabbitmq"; then
     print_success "RabbitMQ is running"
 else
     print_error "RabbitMQ failed to start"
@@ -188,7 +188,7 @@ fi
 print_header "✨ Setup Complete!"
 
 echo ""
-echo "🎉 Cognistock Backend is now running!"
+echo "🎉 Maartly Backend is now running!"
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "📍 Service URLs:"
@@ -202,7 +202,7 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "🔐 Default Credentials:"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
-echo "  RabbitMQ: cognistock / cognistock_rabbitmq_password"
+echo "  RabbitMQ: maartly / maartly_rabbitmq_password"
 echo "  Mongo Express: admin / admin123"
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

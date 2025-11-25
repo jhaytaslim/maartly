@@ -1,7 +1,7 @@
-# Cognistock Integration Test Script (PowerShell)
+# Maartly Integration Test Script (PowerShell)
 # This script tests the connection between frontend and backend
 
-Write-Host "🚀 Cognistock Integration Test" -ForegroundColor Cyan
+Write-Host "🚀 Maartly Integration Test" -ForegroundColor Cyan
 Write-Host "================================" -ForegroundColor Cyan
 Write-Host ""
 

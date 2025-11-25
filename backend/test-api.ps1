@@ -1,11 +1,11 @@
-# Cognistock API Testing Script (PowerShell)
+# Maartly API Testing Script (PowerShell)
 # This script tests all major endpoints of the backend
 
 $BaseUrl = "http://localhost:3000/api/v1"
-$AdminEmail = "admin@cognistock.com"
+$AdminEmail = "admin@maartly.com"
 $AdminPassword = "SecurePassword123!"
 
-Write-Host "🚀 Starting Cognistock API Tests..." -ForegroundColor Cyan
+Write-Host "🚀 Starting Maartly API Tests..." -ForegroundColor Cyan
 Write-Host ""
 
 function Write-Success {

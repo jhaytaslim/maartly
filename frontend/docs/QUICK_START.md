@@ -1,6 +1,6 @@
 # 🚀 Quick Start Guide
 
-Get Stockly up and running in under 5 minutes!
+Get Maartly up and running in under 5 minutes!
 
 ## Prerequisites
 
@@ -232,7 +232,7 @@ vercel
 
 ## 🎉 You're All Set!
 
-Your Stockly inventory system is ready to use. Start by exploring the landing page, then dive into the POS and inventory features.
+Your Maartly inventory system is ready to use. Start by exploring the landing page, then dive into the POS and inventory features.
 
 **Happy Managing! 🎊**
 

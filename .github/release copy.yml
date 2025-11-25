@@ -1,0 +1,52 @@
+# name: "Tauri Release"
+
+# on:
+#   push:
+#     branches:
+#       - release
+#       - main
+#     tags:
+#       - "v*"
+
+# jobs:
+#   release:
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         platform: [macos-latest, ubuntu-22.04, windows-latest]
+
+#     runs-on: ${{ matrix.platform }}
+
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
+
+#       - name: Setup Node
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: 22
+#         #   cache: "npm"
+#         #   cache-dependency-path: frontend/pnpm-lock.yaml
+
+#       - name: Install pnpm
+#         run: npm install -g pnpm
+
+#       - name: Install dependencies
+#         run: pnpm install --frozen-lockfile
+#         working-directory: frontend
+
+#       - name: Install Rust
+#         uses: dtolnay/rust-toolchain@stable
+#         with:
+#           toolchain: stable
+
+#       - name: Build and Release Tauri App
+#         uses: tauri-apps/tauri-action@v0
+#         env:
+#           RUST_TOOLCHAIN: stable
+#         with:
+#           githubToken: ${{ secrets.GITHUB_TOKEN }}
+#           projectPath: frontend
+#           releaseName: "App v${{ github.ref_name }}"
+#           tagName: "v${{ github.ref_name }}"
+#           releaseDraft: true

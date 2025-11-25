@@ -99,11 +99,11 @@ export class NotificationsService {
         <body>
           <div class="container">
             <div class="header">
-              <h1>🎉 Welcome to Martly!</h1>
+              <h1>🎉 Welcome to Maartly!</h1>
             </div>
             <div class="content">
               <p>Hi ${context.firstName},</p>
-              <p>Thank you for registering with Martly - Smart Sales. Simple Control.</p>
+              <p>Thank you for registering with Maartly - Smart Sales. Simple Control.</p>
               <p>Please click the button below to verify your email and set your password:</p>
               <a href="${context.verificationLink}" class="button">Verify Email & Set Password</a>
               <p>If the button doesn't work, copy and paste this link into your browser:</p>
@@ -111,7 +111,7 @@ export class NotificationsService {
               <p>This link will expire in 24 hours.</p>
             </div>
             <div class="footer">
-              <p>© 2024 Martly. All rights reserved.</p>
+              <p>© 2024 Maartly. All rights reserved.</p>
               <p>Smart Sales. Simple Control.</p>
             </div>
           </div>
@@ -138,14 +138,14 @@ export class NotificationsService {
             </div>
             <div class="content">
               <p>Hi ${context.firstName},</p>
-              <p>We received a request to reset your password for your Martly account.</p>
+              <p>We received a request to reset your password for your Maartly account.</p>
               <p>Click the button below to reset your password:</p>
               <a href="${context.resetLink}" class="button">Reset Password</a>
               <p>If you didn't request this, please ignore this email.</p>
               <p>This link will expire in 1 hour.</p>
             </div>
             <div class="footer">
-              <p>© 2024 Martly. All rights reserved.</p>
+              <p>© 2024 Maartly. All rights reserved.</p>
             </div>
           </div>
         </body>

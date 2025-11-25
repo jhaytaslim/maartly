@@ -1,4 +1,4 @@
-# ✅ Your Complete Stockly System is Ready!
+# ✅ Your Complete Maartly System is Ready!
 
 ## 🎉 What You're Getting
 
@@ -26,7 +26,7 @@ A **production-ready, feature-complete** inventory management system with:
 ## 📂 Complete File List (71+ files)
 
 ```
-stockly-inventory-management/
+maartly-inventory-management/
 ├── 📄 Configuration Files
 │   ├── package.json            ✓ All dependencies
 │   ├── tsconfig.json           ✓ TypeScript config

@@ -397,7 +397,7 @@ export function CustomerStorefrontPage({
               <h3 className="font-semibold mb-3">Powered by</h3>
               <div className="flex items-center gap-2">
                 <Package className="h-5 w-5 text-primary" />
-                <span className="font-semibold">Cognistock</span>
+                <span className="font-semibold">Maartly</span>
               </div>
             </div>
           </div>
