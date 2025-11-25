@@ -32,7 +32,7 @@ describe("AuthService", () => {
     service = module.get<AuthService>(AuthService);
   });
 
-  it("should register company and create admin", async () => {
+  it("should register company and create admin w", async () => {
     const dto: CreateTenantDto = {
       businessName: faker.company.name(),
       firstName: faker.person.firstName(),
