@@ -67,7 +67,7 @@ jobs:
         with:
           task-definition: backend/task-definition.json # Path to file in backend/
           service: maartly-service
-          cluster: maartly-cluster-${{ github.ref_name }}
+          cluster: maartly-cluster
           wait-for-service-stability: true
 
   load-test:
