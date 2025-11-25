@@ -4,6 +4,8 @@ on:
   push:
     branches: [develop, staging, main]
     paths: ["frontend/**", "tests/**"]
+    tags:
+      - "v*.*.*"
 
 jobs:
   test:
