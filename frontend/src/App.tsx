@@ -149,8 +149,6 @@ function MainLayout({ language, setLanguage, logout, user }: MainLayoutProps) {
   const currentPage: PageType =
     pageName && PageComponents[pageName] ? pageName : Page.Dashboard;
 
-  // --- Dynamic Accessibility Check & Redirection ---
-
   const hasAccess = canAccessPage(user.role, currentPage);
 
   if (!hasAccess) {
