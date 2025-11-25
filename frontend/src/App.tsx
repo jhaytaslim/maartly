@@ -133,8 +133,6 @@ LoadingFallback.displayName = "LoadingFallback";
 //   setLanguage: (lang: "en" | "es" | "fr") => void;
 // }
 
-// ### edits here
-
 interface MainLayoutProps {
   language: "en" | "es" | "fr";
   setLanguage: (lang: "en" | "es" | "fr") => void;
