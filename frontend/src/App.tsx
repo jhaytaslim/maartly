@@ -14,9 +14,7 @@ import {
   useNavigate,
   Navigate,
 } from "react-router-dom";
-import { Page } from "./constants";
-
-export type PageType = `${Page}`;
+import { Page, PageType } from "./constants";
 
 // Define the pages to exclude from the main accessible list
 const excludedPages: PageType[] = [
