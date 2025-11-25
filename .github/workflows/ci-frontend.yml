@@ -134,17 +134,25 @@ jobs:
   release:
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    # if: github.ref == 'refs/heads/main'
 
     steps:
       - uses: actions/checkout@v4
 
+      # - uses: softprops/action-gh-release@v1
+      #   with:
+      #     files: |
+      #       frontend/src-tauri/target/release/*.exe
+      #       frontend/src-tauri/target/release/*.apk
+      #       frontend/src-tauri/target/release/*.aab
+      #       frontend/src-tauri/target/release/*.ipa
       - uses: softprops/action-gh-release@v1
         with:
           files: |
             frontend/src-tauri/target/release/*.exe
-            frontend/src-tauri/target/release/*.apk
-            frontend/src-tauri/target/release/*.aab
+            frontend/src-tauri/gen/android/app/build/outputs/apk/universal/release/*.apk
+            frontend/src-tauri/gen/android/app/build/outputs/bundle/universalRelease/*.aab
             frontend/src-tauri/target/release/*.ipa
+
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
