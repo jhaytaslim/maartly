@@ -127,8 +127,6 @@ const LoadingFallback = memo(() => (
 
 LoadingFallback.displayName = "LoadingFallback";
 
-// --- Page Renderer Function (replaces the switch statement) ---
-
 // interface PageRendererProps {
 //   currentPage: PageType;
 //   language: "en" | "es" | "fr";
