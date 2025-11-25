@@ -7,8 +7,15 @@ import compression from "compression";
 import cookieParser from "cookie-parser";
 import { HttpExceptionFilter } from "./common/filters/http-exception.filter";
 
+import { Request, Response } from "express";
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const expressApp = app.getHttpAdapter().getInstance();
+
+  expressApp.get("/health", (_req: Request, res: Response) => {
+    res.status(200).send("OK");
+  });
 
   // Security headers
   app.use(helmet());
