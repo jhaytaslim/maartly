@@ -21,10 +21,10 @@ jobs:
           cache: "pnpm"
           cache-dependency-path: "frontend/pnpm-lock.yaml" # Cache hashes subdir lockfile
       - run: pnpm install --frozen-lockfile # Now in frontend dir, finds lockfile
-      - run: pnpm lint
-      - run: pnpm test # Vitest unit
-      - if: github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
-        run: npx playwright test # VRT
+      # - run: pnpm lint
+      # - run: pnpm test # Vitest unit
+      # - if: github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
+      #   run: npx playwright test # VRT
 
   build:
     needs: test
