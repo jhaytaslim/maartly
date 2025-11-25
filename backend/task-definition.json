@@ -1,0 +1,107 @@
+{
+  "family": "maartly-task",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["EC2"],
+  "cpu": "1024",
+  "memory": "2048",
+  "executionRoleArn": "arn:aws:iam::622022425414:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::622022425414:role/maartly-task-role",
+  "containerDefinitions": [
+    {
+      "name": "maartly-backend",
+      "image": "622022425414.dkr.ecr.us-east-1.amazonaws.com/maartly-backend:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 3001,
+          "protocol": "tcp",
+          "hostPort": 3001
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/maartly-backend",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "maartly-task"
+        }
+      },
+      "environment": [
+        {
+          "name": "DATABASE_URL",
+          "value": "mongodb://localhost:27017/cognistock"
+        },
+        {
+          "name": "JWT_SECRET",
+          "value": "your-super-secret-jwt-key"
+        },
+        {
+          "name": "JWT_EXPIRATION",
+          "value": "7d"
+        },
+        {
+          "name": "REDIS_HOST",
+          "value": "localhost"
+        },
+        {
+          "name": "REDIS_PORT",
+          "value": "6379"
+        },
+        {
+          "name": "CACHE_TTL",
+          "value": "3600"
+        },
+        {
+          "name": "RABBITMQ_URL",
+          "value": "amqp://localhost:5672"
+        },
+        {
+          "name": "RATE_LIMIT_TTL",
+          "value": "60"
+        },
+        {
+          "name": "RATE_LIMIT_MAX",
+          "value": "100"
+        },
+        {
+          "name": "EMAIL_HOST",
+          "value": "smtp.gmail.com"
+        },
+        {
+          "name": "EMAIL_PORT",
+          "value": "587"
+        },
+        {
+          "name": "EMAIL_USER",
+          "value": "your-email@gmail.com"
+        },
+        {
+          "name": "EMAIL_PASSWORD",
+          "value": "your-app-password"
+        },
+        {
+          "name": "EMAIL_FROM",
+          "value": "noreply@maartly.com"
+        },
+        {
+          "name": "PORT",
+          "value": "3001"
+        },
+        {
+          "name": "NODE_ENV",
+          "value": "production"
+        }
+      ],
+      "healthCheck": {
+        "command": [
+          "CMD-SHELL",
+          "curl -f http://localhost:3001/health || exit 1"
+        ],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 30
+      }
+    }
+  ]
+}

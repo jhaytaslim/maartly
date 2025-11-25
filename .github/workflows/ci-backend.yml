@@ -65,7 +65,7 @@ jobs:
       - name: Deploy to ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          task-definition: task-definition.json # Or inline JSON
+          task-definition: backend/task-definition.json # Path to file in backend/
           service: maartly-service
           cluster: maartly-cluster-${{ github.ref_name }}
           wait-for-service-stability: true
