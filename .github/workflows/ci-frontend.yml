@@ -101,7 +101,7 @@ jobs:
 
           echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > keystore.jks
 
-          pnpm exec tauri android build --ci -- --release
+          pnpm exec tauri android build --ci
         timeout-minutes: 15
 
       # -------------------
