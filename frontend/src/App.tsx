@@ -161,7 +161,6 @@ function MainLayout({ language, setLanguage, logout, user }: MainLayoutProps) {
     // If restricted, redirect to the first accessible page
     if (firstAccessible) {
       // Use Navigate component for declarative redirection
-      console.log("Access Denied. Redirecting to:", firstAccessible);
       return <Navigate to={`/${firstAccessible}`} replace />;
     }
     return (
