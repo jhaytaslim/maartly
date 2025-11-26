@@ -171,7 +171,6 @@ const testimonials = [
 const Downloads = () => {
   const origin = typeof window !== "undefined" ? window.location.origin : "";
 
-  // Automatically detect branch by domain
   let BASE_DOWNLOAD_URL = "";
 
   if (origin.includes("develop")) {

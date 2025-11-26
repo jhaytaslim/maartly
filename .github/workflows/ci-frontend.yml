@@ -169,6 +169,18 @@ jobs:
       # -------------------
       # SYNC WEB BUILD
       # -------------------
+      # - name: Upload Web App to S3
+      #   uses: jakejarvis/s3-sync-action@v0.5.1
+      #   with:
+      #     args: --acl public-read --delete
+      #   env:
+      #     AWS_S3_BUCKET: ${{ env.S3_BUCKET }}
+      #     AWS_REGION: ${{ env.AWS_REGION }}
+      #     SOURCE_DIR: dist # Relative to working-directory: frontend
+      #     DEST_DIR: ${{ steps.envmap.outputs.folder }}/web
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
       - name: Upload Web App to S3
         uses: jakejarvis/s3-sync-action@v0.5.1
         with:
@@ -176,7 +188,7 @@ jobs:
         env:
           AWS_S3_BUCKET: ${{ env.S3_BUCKET }}
           AWS_REGION: ${{ env.AWS_REGION }}
-          SOURCE_DIR: dist # Relative to working-directory: frontend
+          SOURCE_DIR: frontend/dist
           DEST_DIR: ${{ steps.envmap.outputs.folder }}/web
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
