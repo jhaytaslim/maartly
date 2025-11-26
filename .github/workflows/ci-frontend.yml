@@ -212,11 +212,20 @@ jobs:
       # -------------------
       # CLOUDFRONT INVALIDATION
       # -------------------
+      # - name: Invalidate CloudFront Cache
+      #   run: |
+      #     aws cloudfront create-invalidation \
+      #       --distribution-id "${{ steps.envmap.outputs.cf_id }}" \
+      #       --paths "/*"
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     AWS_REGION: ${{ env.AWS_REGION }}
       - name: Invalidate CloudFront Cache
-        run: |
-          aws cloudfront create-invalidation \
-            --distribution-id "${{ steps.envmap.outputs.cf_id }}" \
-            --paths "/*"
+        uses: chetan/invalidate-cloudfront-action@v2
+        with:
+          distribution: ${{ steps.envmap.outputs.distribution_id }}
+          paths: "/*"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
