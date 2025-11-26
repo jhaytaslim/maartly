@@ -168,6 +168,58 @@ const testimonials = [
   },
 ];
 
+const Downloads = () => {
+  // const branch: string = import.meta?.env?.NEXT_PUBLIC_BRANCH || "develop"; // Set via env in build
+
+  const origin = typeof window !== "undefined" ? window.location.origin : "";
+
+  // Automatically detect branch by domain
+  let BASE_DOWNLOAD_URL = "";
+
+  if (origin.includes("develop")) {
+    BASE_DOWNLOAD_URL =
+      "https://d3g8ny622iz139.cloudfront.net/develop/artifacts";
+  } else if (origin.includes("staging")) {
+    BASE_DOWNLOAD_URL =
+      "https://dbog5ovpqo9d4.cloudfront.net/staging/artifacts";
+  } else {
+    // Production / www
+    BASE_DOWNLOAD_URL = "https://d2rlj16ptats5g.cloudfront.net/main/artifacts";
+  }
+
+  // const BASE_DOWNLOAD_URL = {
+  //   develop: "https://<cloudfront-domain>/develop/artifacts",
+  //   staging: "https://<cloudfront-domain>/staging/artifacts",
+  //   prod: "https://<cloudfront-domain>/prod/artifacts",
+  // }[branch];
+
+  return (
+    <div className="space-y-4 flex flex-col p-2 max-w-160 mx-auto">
+      <a
+        href={`${BASE_DOWNLOAD_URL}/windows/latest.exe`}
+        target="_blank"
+        className="inline-flex items-center justify-center rounded-md text-lg font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-11 px-8 py-2 border bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10"
+      >
+        Download Windows App
+      </a>
+      <a
+        href={`${BASE_DOWNLOAD_URL}/android/latest.apk`}
+        className="inline-flex items-center justify-center rounded-md text-lg font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-11 px-8 py-2 border bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10"
+        target="_blank"
+      >
+        Download Android App
+      </a>
+      <a
+        href={`${BASE_DOWNLOAD_URL}/android/latest.aab`}
+        className="inline-flex items-center justify-center rounded-md text-lg font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-11 px-8 py-2 border bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10"
+        target="_blank"
+      >
+        Download Android Bundle
+      </a>
+    </div>
+  );
+};
+
 export function LandingPage() {
   const { login } = useAuth();
   const [isSignupOpen, setIsSignupOpen] = useState(false);
@@ -662,6 +714,10 @@ export function LandingPage() {
               Schedule Demo
             </Button>
           </div>
+          <div className="container mx-auto px-4 text-center">
+            <Downloads />
+          </div>
+
           <p className="mt-6 opacity-75">
             No credit card required • 14-day free trial • Cancel anytime
           </p>

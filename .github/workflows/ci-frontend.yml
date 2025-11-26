@@ -5,6 +5,10 @@ on:
     branches: [develop, staging, main]
     paths: ["frontend/**", "tests/**"]
 
+env:
+  AWS_REGION: us-east-1
+  S3_BUCKET: maartly-web-hosting
+
 jobs:
   # -------------------
   # TEST JOB
@@ -25,13 +29,11 @@ jobs:
         with:
           node-version: 20
           cache: "pnpm"
-          cache-dependency-path: "frontend/pnpm-lock.yaml"
+          cache-dependency-path: frontend/pnpm-lock.yaml
 
       - run: pnpm install --frozen-lockfile
       # - run: pnpm lint
       # - run: pnpm test
-      # - if: github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
-      #   run: npx playwright test
 
   # -------------------
   # BUILD JOB
@@ -39,8 +41,7 @@ jobs:
   build:
     needs: test
     runs-on: ${{ matrix.os }}
-    if: github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
-    timeout-minutes: 20
+    timeout-minutes: 25
     strategy:
       matrix:
         include:
@@ -62,104 +63,129 @@ jobs:
         with:
           node-version: 20
           cache: "pnpm"
-          cache-dependency-path: "frontend/pnpm-lock.yaml"
+          cache-dependency-path: frontend/pnpm-lock.yaml
 
-      - run: pnpm install
+      - run: pnpm install --frozen-lockfile
       - run: pnpm build
 
       - uses: dtolnay/rust-toolchain@stable
 
-      # -------------------
-      # WINDOWS BUILD
-      # -------------------
-      - if: matrix.target == 'windows'
+      # ----- Windows Build -----
+      - name: Build Windows Installer
+        if: matrix.target == 'windows'
         uses: tauri-apps/tauri-action@v0
-        timeout-minutes: 15
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           projectPath: frontend
           tagName: app-v__VERSION__
           releaseName: "Maartly v__VERSION__"
-          releaseBody: "Release notes"
           releaseDraft: true
           prerelease: ${{ github.ref == 'refs/heads/staging' }}
 
-      # -------------------
-      # ANDROID BUILD
-      # -------------------
-      - if: matrix.target == 'android'
+      # ----- Android Build -----
+      - name: Build Android APK/AAB
+        if: matrix.target == 'android'
         run: |
           if [ ! -d "src-tauri/gen/android" ]; then
             pnpm exec tauri android init
           fi
           echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > keystore.jks
           pnpm exec tauri android build --ci
-        timeout-minutes: 15
 
-      # -------------------
-      # ARTIFACT UPLOAD
-      # -------------------
-      - uses: actions/upload-artifact@v4
+      # ----- Upload Artifacts -----
+      - name: Upload Tauri Artifacts
+        uses: actions/upload-artifact@v4
         with:
           name: tauri-${{ matrix.target }}
           path: |
             frontend/src-tauri/target/release/*.exe
             frontend/src-tauri/gen/android/app/build/outputs/apk/universal/release/*.apk
             frontend/src-tauri/gen/android/app/build/outputs/bundle/universalRelease/*.aab
-            frontend/src-tauri/target/release/*.ipa
           if-no-files-found: ignore
 
   # -------------------
-  # RELEASE JOB
+  # DEPLOY JOB
   # -------------------
-  release:
+  deploy:
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # needed for tagging
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Download Build Artifacts
+      # -------------------
+      # DOWNLOAD ARTIFACTS
+      # -------------------
+      - name: Download Windows artifacts
         uses: actions/download-artifact@v4
         with:
           name: tauri-windows
-          path: ./release-files/windows
-      - uses: actions/download-artifact@v4
+          path: release-files/windows
+        continue-on-error: true
+
+      - name: Download Android artifacts
+        uses: actions/download-artifact@v4
         with:
           name: tauri-android
-          path: ./release-files/android
+          path: release-files/android
+        continue-on-error: true
 
-      - name: Determine next version
-        id: next_version
+      # -------------------
+      # MAP BRANCH → folder + distribution
+      # -------------------
+      - name: Determine branch target folder
+        id: envmap
         run: |
-          latest=$(git describe --tags --abbrev=0 || echo "v0.0.0")
-          IFS='.' read -r major minor patch <<< "${latest#v}"
-          patch=$((patch + 1))
-          new_tag="v$major.$minor.$patch"
-          echo "tag=$new_tag" >> $GITHUB_OUTPUT
+          if [[ "${GITHUB_REF_NAME}" == "develop" ]]; then
+            echo "folder=develop" >> $GITHUB_OUTPUT
+            echo "cf_id=${{ secrets.CF_DISTRIBUTION_DEVELOP }}" >> $GITHUB_OUTPUT
+          elif [[ "${GITHUB_REF_NAME}" == "staging" ]]; then
+            echo "folder=staging" >> $GITHUB_OUTPUT
+            echo "cf_id=${{ secrets.CF_DISTRIBUTION_STAGING }}" >> $GITHUB_OUTPUT
+          else
+            echo "folder=main" >> $GITHUB_OUTPUT
+            echo "cf_id=${{ secrets.CF_DISTRIBUTION_MAIN }}" >> $GITHUB_OUTPUT
+          fi
 
-      - name: Create Git tag
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git tag ${{ steps.next_version.outputs.tag }}
-          git push origin ${{ steps.next_version.outputs.tag }}
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+      # -------------------
+      # SYNC WEB BUILD
+      # -------------------
+      - name: Upload Web App to S3
+        uses: jakejarvis/s3-sync-action@v0.5.1
         with:
-          tag_name: ${{ steps.next_version.outputs.tag }}
-          files: |
-            ./release-files/windows/*.exe
-            ./release-files/android/*.apk
-            ./release-files/android/*.aab
+          args: --acl public-read --delete
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AWS_S3_BUCKET: ${{ env.S3_BUCKET }}
+          AWS_REGION: ${{ env.AWS_REGION }}
+          SOURCE_DIR: frontend/dist
+          DEST_DIR: ${{ steps.envmap.outputs.folder }}/web
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      # -------------------
+      # UPLOAD ARTIFACTS
+      # -------------------
+      - name: Upload Desktop + Android Artifacts to S3
+        uses: jakejarvis/s3-sync-action@v0.5.1
+        with:
+          args: --acl public-read
+        env:
+          AWS_S3_BUCKET: ${{ env.S3_BUCKET }}
+          AWS_REGION: ${{ env.AWS_REGION }}
+          SOURCE_DIR: release-files
+          DEST_DIR: ${{ steps.envmap.outputs.folder }}/artifacts
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      # -------------------
+      # CLOUDFRONT INVALIDATION
+      # -------------------
+      - name: Invalidate CloudFront Cache
+        uses: awact/cloudfront-action@v2
+        with:
+          distribution-id: ${{ steps.envmap.outputs.cf_id }}
+          paths: "/*"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
