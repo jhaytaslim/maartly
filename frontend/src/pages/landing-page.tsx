@@ -169,8 +169,6 @@ const testimonials = [
 ];
 
 const Downloads = () => {
-  // const branch: string = import.meta?.env?.NEXT_PUBLIC_BRANCH || "develop"; // Set via env in build
-
   const origin = typeof window !== "undefined" ? window.location.origin : "";
 
   // Automatically detect branch by domain
