@@ -4,10 +4,11 @@ on:
   push:
     branches: [develop, staging, main]
     paths: ["frontend/**", "tests/**"]
-    tags:
-      - "v*.*.*"
 
 jobs:
+  # -------------------
+  # TEST JOB
+  # -------------------
   test:
     runs-on: ubuntu-latest
     defaults:
@@ -32,12 +33,14 @@ jobs:
       # - if: github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
       #   run: npx playwright test
 
+  # -------------------
+  # BUILD JOB
+  # -------------------
   build:
     needs: test
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 20
     if: github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
-
+    timeout-minutes: 20
     strategy:
       matrix:
         include:
@@ -47,11 +50,9 @@ jobs:
             target: android
           # - os: macos-latest
           #   target: ios
-
     defaults:
       run:
         working-directory: frontend
-
     steps:
       - uses: actions/checkout@v4
 
@@ -89,12 +90,6 @@ jobs:
       # -------------------
       # ANDROID BUILD
       # -------------------
-      # - if: matrix.target == 'android'
-      #   run: |
-      #     pnpm exec tauri android init
-      #     echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > keystore.jks
-      #     pnpm exec tauri android build --release --ci
-      #   timeout-minutes: 15
       - if: matrix.target == 'android'
         run: |
           if [ ! -d "src-tauri/gen/android" ]; then
@@ -102,7 +97,6 @@ jobs:
           fi
 
           echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > keystore.jks
-
           pnpm exec tauri android build --ci
         timeout-minutes: 15
 
@@ -131,28 +125,50 @@ jobs:
             frontend/src-tauri/target/release/*.ipa
           if-no-files-found: ignore
 
+  # -------------------
+  # RELEASE JOB
+  # -------------------
   release:
     needs: build
     runs-on: ubuntu-latest
-    # if: github.ref == 'refs/heads/main'
-
+    if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
-
-      # - uses: softprops/action-gh-release@v1
-      #   with:
-      #     files: |
-      #       frontend/src-tauri/target/release/*.exe
-      #       frontend/src-tauri/target/release/*.apk
-      #       frontend/src-tauri/target/release/*.aab
-      #       frontend/src-tauri/target/release/*.ipa
-      - uses: softprops/action-gh-release@v1
         with:
+          fetch-depth: 0 # needed to create tags
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Determine next version
+        id: next_version
+        run: |
+          # Get latest tag or default
+          latest=$(git describe --tags --abbrev=0 || echo "v0.0.0")
+          echo "Latest tag: $latest"
+          IFS='.' read -r major minor patch <<< "${latest#v}"
+          patch=$((patch + 1))
+          new_tag="v$major.$minor.$patch"
+          echo "New tag: $new_tag"
+          echo "tag=$new_tag" >> $GITHUB_OUTPUT
+
+      - name: Create Git tag
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git tag ${{ steps.next_version.outputs.tag }}
+          git push origin ${{ steps.next_version.outputs.tag }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.next_version.outputs.tag }}
           files: |
             frontend/src-tauri/target/release/*.exe
             frontend/src-tauri/gen/android/app/build/outputs/apk/universal/release/*.apk
             frontend/src-tauri/gen/android/app/build/outputs/bundle/universalRelease/*.aab
             frontend/src-tauri/target/release/*.ipa
-
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
