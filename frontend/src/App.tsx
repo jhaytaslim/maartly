@@ -164,7 +164,6 @@ function MainLayout({ language, setLanguage, logout, user }: MainLayoutProps) {
       console.log("Access Denied. Redirecting to:", firstAccessible);
       return <Navigate to={`/${firstAccessible}`} replace />;
     }
-    // Fallback for case where user has no access to ANY page (Highly restrictive role)
     return (
       <div className="p-8 text-center text-xl text-red-600">
         Access Denied. Please contact your administrator.
