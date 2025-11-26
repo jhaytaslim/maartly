@@ -48,8 +48,6 @@ jobs:
             target: windows
           - os: ubuntu-latest
             target: android
-          # - os: macos-latest
-          #   target: ios
     defaults:
       run:
         working-directory: frontend
@@ -95,19 +93,9 @@ jobs:
           if [ ! -d "src-tauri/gen/android" ]; then
             pnpm exec tauri android init
           fi
-
           echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > keystore.jks
           pnpm exec tauri android build --ci
         timeout-minutes: 15
-
-      # -------------------
-      # (OPTIONAL) iOS BUILD
-      # Needs macOS runner
-      # -------------------
-      # - if: matrix.target == 'ios'
-      #   run: |
-      #     echo "${{ secrets.IOS_CERTIFICATE_BASE64 }}" | base64 -d > cert.p12
-      #     pnpm exec tauri ios build -- --release
 
       # -------------------
       # ARTIFACT UPLOAD
@@ -116,12 +104,9 @@ jobs:
         with:
           name: tauri-${{ matrix.target }}
           path: |
-            # Windows executables
             frontend/src-tauri/target/release/*.exe
-            # Android builds
             frontend/src-tauri/gen/android/app/build/outputs/apk/universal/release/*.apk
             frontend/src-tauri/gen/android/app/build/outputs/bundle/universalRelease/*.aab
-            # iOS builds
             frontend/src-tauri/target/release/*.ipa
           if-no-files-found: ignore
 
@@ -135,23 +120,30 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # needed to create tags
+          fetch-depth: 0 # needed for tagging
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: tauri-windows
+          path: ./release-files/windows
+      - uses: actions/download-artifact@v4
+        with:
+          name: tauri-android
+          path: ./release-files/android
+
       - name: Determine next version
         id: next_version
         run: |
-          # Get latest tag or default
           latest=$(git describe --tags --abbrev=0 || echo "v0.0.0")
-          echo "Latest tag: $latest"
           IFS='.' read -r major minor patch <<< "${latest#v}"
           patch=$((patch + 1))
           new_tag="v$major.$minor.$patch"
-          echo "New tag: $new_tag"
           echo "tag=$new_tag" >> $GITHUB_OUTPUT
 
       - name: Create Git tag
@@ -166,9 +158,8 @@ jobs:
         with:
           tag_name: ${{ steps.next_version.outputs.tag }}
           files: |
-            frontend/src-tauri/target/release/*.exe
-            frontend/src-tauri/gen/android/app/build/outputs/apk/universal/release/*.apk
-            frontend/src-tauri/gen/android/app/build/outputs/bundle/universalRelease/*.aab
-            frontend/src-tauri/target/release/*.ipa
+            ./release-files/windows/*.exe
+            ./release-files/android/*.apk
+            ./release-files/android/*.aab
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
