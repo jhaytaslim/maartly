@@ -200,7 +200,8 @@ jobs:
         if: steps.envmap.outputs.folder != 'develop' # Skip on develop (no binaries needed?)
         uses: jakejarvis/s3-sync-action@v0.5.1
         with:
-          args: --acl public-read
+          # args: --acl public-read
+          args: --follow-symlinks --delete # Omit --acl entirely; add other flags like --delete if you want to remove old files
         env:
           AWS_S3_BUCKET: ${{ env.S3_BUCKET }}
           AWS_REGION: ${{ env.AWS_REGION }}

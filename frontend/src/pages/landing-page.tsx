@@ -184,12 +184,6 @@ const Downloads = () => {
     BASE_DOWNLOAD_URL = "https://d2rlj16ptats5g.cloudfront.net/main/artifacts";
   }
 
-  // const BASE_DOWNLOAD_URL = {
-  //   develop: "https://<cloudfront-domain>/develop/artifacts",
-  //   staging: "https://<cloudfront-domain>/staging/artifacts",
-  //   prod: "https://<cloudfront-domain>/prod/artifacts",
-  // }[branch];
-
   return (
     <div className="space-y-4 flex flex-col p-2 max-w-160 mx-auto">
       <a
