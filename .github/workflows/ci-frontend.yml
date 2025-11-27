@@ -52,6 +52,7 @@ jobs:
     defaults:
       run:
         working-directory: frontend
+    # if: github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main' # Skip on develop (web-only deploys there)
     steps:
       - uses: actions/checkout@v4
 
@@ -110,9 +111,26 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-
+    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/main'
+    defaults:
+      run:
+        working-directory: frontend
     steps:
       - uses: actions/checkout@v4
+
+      # ----- Setup for Web Build -----
+      - uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+          cache-dependency-path: frontend/pnpm-lock.yaml
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build # Generates frontend/dist
 
       # -------------------
       # DOWNLOAD ARTIFACTS
@@ -151,10 +169,22 @@ jobs:
       # -------------------
       # SYNC WEB BUILD
       # -------------------
+      # - name: Upload Web App to S3
+      #   uses: jakejarvis/s3-sync-action@v0.5.1
+      #   with:
+      #     args: --acl public-read --delete
+      #   env:
+      #     AWS_S3_BUCKET: ${{ env.S3_BUCKET }}
+      #     AWS_REGION: ${{ env.AWS_REGION }}
+      #     SOURCE_DIR: dist # Relative to working-directory: frontend
+      #     DEST_DIR: ${{ steps.envmap.outputs.folder }}/web
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
       - name: Upload Web App to S3
         uses: jakejarvis/s3-sync-action@v0.5.1
         with:
-          args: --acl public-read --delete
+          args: --delete #--acl public-read --delete
         env:
           AWS_S3_BUCKET: ${{ env.S3_BUCKET }}
           AWS_REGION: ${{ env.AWS_REGION }}
@@ -167,6 +197,7 @@ jobs:
       # UPLOAD ARTIFACTS
       # -------------------
       - name: Upload Desktop + Android Artifacts to S3
+        if: steps.envmap.outputs.folder != 'develop' # Skip on develop (no binaries needed?)
         uses: jakejarvis/s3-sync-action@v0.5.1
         with:
           args: --acl public-read
@@ -178,14 +209,36 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
+      - name: Debug Distribution ID
+        run: |
+          echo "Using CF Distribution: ${{ steps.envmap.outputs.cf_id }}"
+
       # -------------------
       # CLOUDFRONT INVALIDATION
       # -------------------
+      # - name: Invalidate CloudFront Cache
+      #   run: |
+      #     aws cloudfront create-invalidation \
+      #       --distribution-id "${{ steps.envmap.outputs.cf_id }}" \
+      #       --paths "/*"
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     AWS_REGION: ${{ env.AWS_REGION }}
+      # - name: Invalidate CloudFront Cache
+      #   uses: chetan/invalidate-cloudfront-action@v2
+      #   with:
+      #     distribution: ${{ steps.envmap.outputs.distribution_id }}
+      #     paths: "/*"
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     AWS_REGION: ${{ env.AWS_REGION }}
       - name: Invalidate CloudFront Cache
-        uses: awact/cloudfront-action@v2
-        with:
-          distribution-id: ${{ steps.envmap.outputs.cf_id }}
-          paths: "/*"
+        uses: chetan/invalidate-cloudfront-action@v2
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          DISTRIBUTION: ${{ steps.envmap.outputs.cf_id }}
+          PATHS: "/*"
+          AWS_REGION: ${{ env.AWS_REGION }}
